@@ -1,9 +1,8 @@
 import streamlit as st
 from PIL import Image
-import openai
 import io
 import os
-
+import requests
 
 st.title("Construction Plan Q&A (VLM)")
 
@@ -11,7 +10,6 @@ st.title("Construction Plan Q&A (VLM)")
 api_key = st.text_input("Enter your OpenAI API Key", type="password")
 if not api_key:
     st.warning("Please enter your OpenAI API key to use the app.")
-
 
 uploaded_file = st.file_uploader(
     "Upload a construction plan image or PDF",
@@ -30,7 +28,6 @@ def split_pdf_to_pages(pdf_bytes):
         pages.append(img_bytes)
     return pages
 
-
 # Display image or PDF page images above the question box
 if uploaded_file:
     filetype = uploaded_file.type
@@ -40,61 +37,51 @@ if uploaded_file:
         page_images = split_pdf_to_pages(pdf_bytes)
         st.write(f"PDF has {len(page_images)} pages.")
         for idx, img_bytes in enumerate(page_images):
-            st.image(img_bytes, caption=f"Page {idx+1}", use_container_width=True)
+            st.image(img_bytes, caption=f"Page {idx+1}", width='stretch')
     else:
         uploaded_file.seek(0)
         image_bytes = uploaded_file.read()
         image = Image.open(io.BytesIO(image_bytes))
-        st.image(image, caption="Uploaded Plan", use_container_width=True)
+        st.image(image, caption="Uploaded Plan", width='stretch')
 
 question = st.text_input("Ask a question about the plan (for images only):")
 
+# Call FastAPI VLM backend
+VLM_API_URL = os.environ.get("VLM_API_URL", "http://localhost:8080/describe-image/")
 
-
-
-
-def call_openai_gpt4v(image_bytes, question, api_key):
-    import base64
-    img_b64 = base64.b64encode(image_bytes).decode("utf-8")
-    openai.api_key = api_key
+def call_vlm_api(image_bytes, question, api_key):
+    files = {"image": ("image.png", image_bytes, "image/png")}
+    data = {"question": question, "api_key": api_key}
     try:
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "user", "content": [
-                    {"type": "text", "text": question},
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_b64}"}}
-                ]}
-            ],
-            max_tokens=512
-        )
-        return response.choices[0].message.content
+        response = requests.post(VLM_API_URL, files=files, data=data)
+        if response.status_code == 200:
+            return response.json().get("answer", "No answer returned.")
+        else:
+            return f"API Error: {response.status_code} {response.text}"
     except Exception as e:
         return f"API Error: {e}"
 
 if uploaded_file and api_key:
     filetype = uploaded_file.type
     if filetype == "application/pdf":
-        # PDF: split into page images
         uploaded_file.seek(0)
         pdf_bytes = uploaded_file.read()
         page_images = split_pdf_to_pages(pdf_bytes)
         st.write(f"PDF has {len(page_images)} pages.")
         for idx, img_bytes in enumerate(page_images):
-                st.image(img_bytes, caption=f"Page {idx+1}", use_container_width=True)
-                if question:
-                    st.write(f"Processing your question for page {idx+1}...")
-                    answer = call_openai_gpt4v(img_bytes, question, api_key)
-                    st.success(f"Answer for Page {idx+1}:")
-                    st.write(answer)
+            st.image(img_bytes, caption=f"Page {idx+1}", width='stretch')
+            if question:
+                st.write(f"Processing your question for page {idx+1}...")
+                answer = call_vlm_api(img_bytes, question, api_key)
+                st.success(f"Answer for Page {idx+1}:")
+                st.write(answer)
     else:
-        # Image file
         uploaded_file.seek(0)
         image_bytes = uploaded_file.read()
         if question:
-              st.write("Processing your question...")
-              answer = call_openai_gpt4v(image_bytes, question, api_key)
-              st.success("Answer:")
-              st.write(answer)
+            st.write("Processing your question...")
+            answer = call_vlm_api(image_bytes, question, api_key)
+            st.success("Answer:")
+            st.write(answer)
 elif uploaded_file and question and not api_key:
     st.warning("Please provide your OpenAI API key.")

@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  vlm_api:
+    build:
+      context: ./vlm_api
+    container_name: vlm_api
+    ports:
+      - "8081:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+  vlm_ui:
+    build:
+      context: ./vlm_ui
+    container_name: vlm_ui
+    ports:
+      - "8501:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - VLM_API_URL=http://vlm_api:8080/describe-image/
+    depends_on:
+      - vlm_api

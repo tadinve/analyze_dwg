@@ -1,5 +1,4 @@
 streamlit
 pillow
 requests
-openai
-PyMuPDF
+fitz
