@@ -27,7 +27,7 @@ RUN pip install -r requirements.txt
 COPY . /app/
 
 # Expose Streamlit port
-EXPOSE 8501
+EXPOSE 8080
 
 # Streamlit entrypoint
-CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8080", "--server.address=0.0.0.0"]
