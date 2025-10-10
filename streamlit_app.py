@@ -4,18 +4,31 @@ import openai
 import io
 import os
 
+
 st.title("Construction Plan Q&A (VLM)")
 
-# Get API key from environment variable or Streamlit secrets
-api_key = os.environ.get("OPENAI_API_KEY")
+# API key input at the top
+api_key = st.text_input("Enter your OpenAI API Key", type="password")
 if not api_key:
-    api_key = st.text_input("Enter your OpenAI API Key", type="password")
+    st.warning("Please enter your OpenAI API key to use the app.")
 
 
 uploaded_file = st.file_uploader(
     "Upload a construction plan image or PDF",
     type=["png", "jpg", "jpeg", "gif", "pdf"]
 )
+
+# PDF handling
+def split_pdf_to_pages(pdf_bytes):
+    import fitz  # PyMuPDF
+    pdf_doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    pages = []
+    for i in range(len(pdf_doc)):
+        page = pdf_doc.load_page(i)
+        pix = page.get_pixmap()
+        img_bytes = pix.tobytes("png")
+        pages.append(img_bytes)
+    return pages
 
 
 # Display image or PDF page images above the question box
@@ -37,17 +50,8 @@ if uploaded_file:
 question = st.text_input("Ask a question about the plan (for images only):")
 
 
-# PDF handling
-def split_pdf_to_pages(pdf_bytes):
-    import fitz  # PyMuPDF
-    pdf_doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    pages = []
-    for i in range(len(pdf_doc)):
-        page = pdf_doc.load_page(i)
-        pix = page.get_pixmap()
-        img_bytes = pix.tobytes("png")
-        pages.append(img_bytes)
-    return pages
+
+
 
 def call_openai_gpt4v(image_bytes, question, api_key):
     import base64
