@@ -1,250 +1,192 @@
-import os
-import json
+# app.py
+import textwrap
+from typing import Dict, Any, List, Optional
+
 import streamlit as st
-from neo4j import GraphDatabase
+import pandas as pd
+from neo4j import GraphDatabase, basic_auth
 
-# --- OpenAI for Q6 ---
-try:
-    from openai import OpenAI
-    _OPENAI_AVAILABLE = True
-except Exception:
-    _OPENAI_AVAILABLE = False
+# ─────────────────────────────────────────────────────────────
+# Setup & Secrets
+# ─────────────────────────────────────────────────────────────
+st.set_page_config(page_title="DocLabs — Knowledge Graph Q&A", layout="wide")
 
-st.set_page_config(page_title="DocLabs — Knowledge Graph Q&A", layout="centered")
+NEO4J_URI = st.secrets.get("NEO4J_URI")
+NEO4J_USER = st.secrets.get("NEO4J_USER")
+NEO4J_PASSWORD = st.secrets.get("NEO4J_PASS")
+OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", None)  # optional for Q6
 
-# ===============================
-# Secrets / config helpers
-# ===============================
-def _get(key, *alt_keys, default=None):
-    if isinstance(st.secrets, dict):
-        for k in (key,) + alt_keys:
-            if k in st.secrets:
-                return st.secrets[k]
-    for k in (key,) + alt_keys:
-        v = os.getenv(k)
-        if v:
-            return v
-    return default
+driver = GraphDatabase.driver(NEO4J_URI, auth=basic_auth(NEO4J_USER, NEO4J_PASSWORD))
 
-# Aura creds (compatible with older names too)
-NEO4J_URI = _get("NEO4J_URI", "AURA_URI", "NEO4J_URL", default="neo4j+s://PLACEHOLDER.databases.neo4j.io")
-NEO4J_USER = _get("NEO4J_USER", "AURA_USER", "NEO4J_USERNAME", default="neo4j")
-NEO4J_PASSWORD = _get("NEO4J_PASSWORD", "AURA_PASSWORD", "NEO4J_PASS", default="PLACEHOLDER")
+# ─────────────────────────────────────────────────────────────
+# Utils
+# ─────────────────────────────────────────────────────────────
+def run_query(query: str, params: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+    with driver.session() as session:
+        result = session.run(query, params or {})
+        data = [r.data() for r in result]
+    return data
 
-if "PLACEHOLDER" in NEO4J_URI or "PLACEHOLDER" in NEO4J_PASSWORD:
-    st.error("Neo4j credentials are missing or using placeholders. Check `.streamlit/secrets.toml`.")
-    st.stop()
+def safe_md(label: str, val: str) -> str:
+    return f"**{label}:** {val}"
 
-masked_uri = NEO4J_URI.replace("neo4j+s://", "neo4j+s://•••.")
-st.sidebar.caption(f"DB: {masked_uri}")
+def show_summary(md_lines: List[str]):
+    st.markdown("\n".join(md_lines))
 
-driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
-try:
-    with driver.session() as s:
-        s.run("RETURN 1 AS ok").single()
-    st.sidebar.success("Neo4j connected")
-except Exception as e:
-    st.sidebar.error(f"Neo4j connection failed: {e}")
-    st.stop()
+def is_write_query(q: str) -> bool:
+    ql = q.lower()
+    forbidden = [" merge ", " create ", " delete ", " detach ", " set ", " remove ", " load csv", " call db.", " apoc.", " yield "]
+    return any(tok in ql for tok in forbidden)
 
-# ===============================
-# Cypher templates (Q1–Q5)
-# ===============================
+# ─────────────────────────────────────────────────────────────
+# Q1–Q5 Cypher
+# ─────────────────────────────────────────────────────────────
+
 Q1 = """
+// Q1: Entitlement evidence bundle for a CO
 MATCH (co:ChangeOrder {id:$co_id})
-OPTIONAL MATCH (co)-[:REFERS_TO]->(art)
-WITH co, collect(DISTINCT art) AS artifacts
-OPTIONAL MATCH (co)-[:HAS_EVIDENCE]->(ev:Evidence)
-OPTIONAL MATCH (ev)-[:EVIDENCE_FROM]->(evch:Chunk)
-WITH co, artifacts,
-     collect(DISTINCT {id:ev.id, supports:ev.supports, confidence:ev.confidence, reason:ev.reason}) AS evidence,
-     collect(DISTINCT {id:evch.id, section:evch.section, text:substring(evch.text,0,140)+'...'}) AS evidenceChunks
-OPTIONAL MATCH (ctDoc:Document {type:'Contract'})-[:HAS_CHUNK]->(ctch:Chunk)
+OPTIONAL MATCH (co)-[:REFERS_TO]->(ref)
+WITH co, collect(DISTINCT ref) AS refs
+
+// Any CO chunks that cite evidence (specs/RFIs/etc.)
+OPTIONAL MATCH (coChunk:Chunk)
+WHERE coChunk.id STARTS WITH co.id + '#'
+OPTIONAL MATCH (coChunk)-[:CITES]->(ev:Chunk)
+WITH co, refs, collect(DISTINCT ev) AS citedChunks
+
+// Contract clauses (SOW/Exclusions) across any Contract doc
+OPTIONAL MATCH (ctDoc:Document)-[:IS_A]->(:DocType)-[:IN_CATEGORY]->(:DocCategory {name:'Contract Documents'})
+OPTIONAL MATCH (ctDoc)-[:HAS_CHUNK]->(ctch:Chunk)
 WHERE ctch.section IN ['SOW','Exclusions']
-WITH co, artifacts, evidence, evidenceChunks,
-     collect(DISTINCT {id:ctch.id, section:ctch.section, text:substring(ctch.text,0,140)+'...'}) AS contractClauses
-OPTIONAL MATCH (co)-[:REFERS_TO]->(db:DesignBasis)
-OPTIONAL MATCH (db)-[:HAS_DOCUMENT]->(dbdoc:Document)-[:HAS_CHUNK]->(dbch:Chunk)
-WITH co, artifacts, evidence, evidenceChunks, contractClauses,
-     collect(DISTINCT {id:dbch.id, section:coalesce(dbch.section,'(n/a)'), text:substring(dbch.text,0,140)+'...'}) AS designBasisClauses
-OPTIONAL MATCH (co)-[:AFFECTS]->(wa:WorkArea)
-OPTIONAL MATCH (co)-[:MODIFIES]->(sys:System)
-WITH co, artifacts, evidence, evidenceChunks, contractClauses, designBasisClauses,
-     collect(DISTINCT wa.name) AS workAreas,
-     collect(DISTINCT sys.name) AS systems
-OPTIONAL MATCH (co)-[:COVERED_BY]->(al:Allowance)
-WITH co, artifacts, evidence, evidenceChunks, contractClauses, designBasisClauses, workAreas, systems,
-     collect(DISTINCT {id:al.id, name:al.name, amount:al.amount}) AS allowances
+WITH co, refs, citedChunks, collect(DISTINCT ctch) AS contractChunks
+
 RETURN
-  co.id      AS changeOrder,
-  co.title   AS title,
-  co.status  AS status,
-  [a IN artifacts WHERE a IS NOT NULL | labels(a)[0] + ':' + coalesce(a.id,a.number)] AS referencedArtifacts,
-  contractClauses,
-  designBasisClauses,
-  evidence,
-  evidenceChunks,
-  workAreas,
-  systems,
-  allowances
-LIMIT 1
+  co.id       AS changeOrder,
+  co.title    AS title,
+  co.status   AS status,
+  [r IN refs WHERE r IS NOT NULL |
+     labels(r)[0] + ':' + coalesce(r.id, r.number, r.title, '')]              AS referencedArtifacts,
+  [e IN citedChunks WHERE e IS NOT NULL |
+     { id:e.id, section:e.section, text:substring(e.text,0,160)+'...' }]       AS citedEvidence,
+  [e IN contractChunks WHERE e IS NOT NULL |
+     { id:e.id, section:e.section, text:substring(e.text,0,160)+'...' }]       AS contractClauses
+LIMIT 1;
 """
 
+# Q2 rewritten WITHOUT APOC (uses id lists to intersect)
 Q2 = """
+// Q2: Precedent COs similar to this CO (shared artifacts / WBS / systems)
 MATCH (co:ChangeOrder {id:$co_id})
-OPTIONAL MATCH (co)-[:REFERS_TO]->(a0)
-OPTIONAL MATCH (co)-[:HAS_COST_ITEM]->(:CostItem)-[:CODED_AS]->(w0:WBS)
-OPTIONAL MATCH (co)-[:MODIFIES]->(s0:System)
-OPTIONAL MATCH (co)-[:AFFECTS]->(wa0:WorkArea)
-WITH co,
-     collect(DISTINCT a0) AS arts0,
-     collect(DISTINCT w0.code) AS wbs0,
-     collect(DISTINCT s0.id) AS sys0,
-     collect(DISTINCT wa0.id) AS wa0
+OPTIONAL MATCH (co)-[:REFERS_TO]->(art)
+WITH co, collect(DISTINCT coalesce(art.id, art.number, art.title)) AS artIds
 
-MATCH (other:ChangeOrder)
-WHERE other.id <> co.id
-OPTIONAL MATCH (other)-[:REFERS_TO]->(a1)
-OPTIONAL MATCH (other)-[:HAS_COST_ITEM]->(:CostItem)-[:CODED_AS]->(w1:WBS)
-OPTIONAL MATCH (other)-[:MODIFIES]->(s1:System)
-OPTIONAL MATCH (other)-[:AFFECTS]->(wa1:WorkArea)
+OPTIONAL MATCH (co)-[:HAS_COST_ITEM]->(:CostItem)-[:CODED_AS]->(wbs:WBS)
+WITH co, artIds, collect(DISTINCT wbs.code) AS wbsCodes
+
+OPTIONAL MATCH (co)-[:MODIFIES]->(sys:System)
+WITH co, artIds, wbsCodes, collect(DISTINCT sys.id) AS systems
+
+MATCH (other:ChangeOrder) WHERE other.id <> co.id
+
+// Collect comparable features for other COs
+OPTIONAL MATCH (other)-[:REFERS_TO]->(a)
+WITH co, other, artIds, wbsCodes, systems,
+     collect(DISTINCT coalesce(a.id, a.number, a.title)) AS oArtIds
+
+OPTIONAL MATCH (other)-[:HAS_COST_ITEM]->(:CostItem)-[:CODED_AS]->(ow:WBS)
+WITH co, other, artIds, wbsCodes, systems, oArtIds,
+     collect(DISTINCT ow.code) AS oWbs
+
+OPTIONAL MATCH (other)-[:MODIFIES]->(os:System)
+WITH co, other, artIds, wbsCodes, systems, oArtIds, oWbs,
+     collect(DISTINCT os.id) AS oSys
+
+// Compute intersections
 WITH co, other,
-     collect(DISTINCT a1) AS arts1,
-     collect(DISTINCT w1.code) AS wbs1,
-     collect(DISTINCT s1.id) AS sys1,
-     collect(DISTINCT wa1.id) AS wa1,
-     arts0, wbs0, sys0, wa0
+     [x IN oArtIds WHERE x IS NOT NULL AND x IN artIds] AS sharedArtIds,
+     [x IN oWbs    WHERE x IS NOT NULL AND x IN wbsCodes] AS sharedWbs,
+     [x IN oSys    WHERE x IS NOT NULL AND x IN systems] AS sharedSys
 
-WITH co, other,
-     [x IN arts1 WHERE x IN arts0] AS artMatch,
-     [x IN wbs1 WHERE x IN wbs0] AS wbsMatch,
-     [x IN sys1 WHERE x IN sys0] AS sysMatch,
-     [x IN wa1 WHERE x IN wa0] AS areaMatch
+WHERE size(sharedArtIds) > 0 OR size(sharedWbs) > 0 OR size(sharedSys) > 0
 
-WHERE coalesce(size(artMatch),0) > 0
-   OR coalesce(size(wbsMatch),0) > 0
-   OR coalesce(size(sysMatch),0) > 0
-   OR coalesce(size(areaMatch),0) > 0
+// For display, fetch artifact labels for matched IDs
+OPTIONAL MATCH (other)-[:REFERS_TO]->(ra)
+WHERE coalesce(ra.id, ra.number, ra.title) IN sharedArtIds
+WITH co, other, sharedWbs, sharedSys,
+     collect(DISTINCT labels(ra)[0] + ':' + coalesce(ra.id, ra.number, ra.title,'')) AS matchedArtifacts
 
 RETURN
-  co.id       AS targetCO,
-  other.id    AS similarCO,
-  other.title AS title,
-  other.status AS status,
-  CASE WHEN size(artMatch) > 0 THEN artMatch ELSE [] END AS matchedArtifacts,
-  CASE WHEN size(wbsMatch) > 0 THEN wbsMatch ELSE [] END AS matchedWBS,
-  CASE WHEN size(sysMatch) > 0 THEN sysMatch ELSE [] END AS matchedSystems,
-  CASE WHEN size(areaMatch) > 0 THEN areaMatch ELSE [] END AS matchedWorkAreas
-ORDER BY other.status
-LIMIT 10
+  co.id          AS targetCO,
+  other.id       AS similarCO,
+  other.title    AS title,
+  other.status   AS status,
+  sharedWbs      AS matchedWBS,
+  matchedArtifacts AS matchedArtifacts,
+  sharedSys      AS matchedSystems
+ORDER BY other.id
+LIMIT 10;
 """
 
 Q3 = """
+// Q3: Impact summary – what this CO touches
 MATCH (co:ChangeOrder {id:$co_id})
-OPTIONAL MATCH (co)-[:HAS_COST_ITEM]->(ci:CostItem)-[:CODED_AS]->(wbs:WBS)
-WITH co,
-     sum(coalesce(ci.amount,0)) AS totalCost,
-     collect(DISTINCT {type:ci.type, code:ci.code, amount:ci.amount, wbs:coalesce(wbs.name,wbs.code)}) AS costs
-OPTIONAL MATCH (co)-[:IMPACTS]->(act:Activity)-[:BELONGS_TO]->(sch:Schedule)
-WITH co, totalCost, costs,
-     collect(DISTINCT {activity:act.name, duration:act.durationDays, critical:act.isCritical, schedule:sch.version}) AS scheduleImpact
-OPTIONAL MATCH (co)-[:REQUESTED_BY]->(req:Person)
-OPTIONAL MATCH (co)-[:PARTY_TO]->(ven:Vendor)
-WITH co, totalCost, costs, scheduleImpact,
-     coalesce(req.name,'(unknown)') AS requestedBy,
-     coalesce(ven.name,'(unspecified)') AS vendorName
-OPTIONAL MATCH (co)-[:AFFECTS]->(wa:WorkArea)
 OPTIONAL MATCH (co)-[:MODIFIES]->(sys:System)
-WITH co, totalCost, costs, scheduleImpact, requestedBy, vendorName,
-     collect(DISTINCT wa.name) AS workAreas,
-     collect(DISTINCT sys.name) AS systems
-OPTIONAL MATCH (ct:Contract)-[:HAS_ALLOWANCE]->(al:Allowance)
-OPTIONAL MATCH (ct)-[:HAS_CONTINGENCY]->(ctg:Contingency)
-OPTIONAL MATCH (ct)-[:HAS_UNIT_PRICE]->(upi:UnitPriceItem)
-OPTIONAL MATCH (co)-[:COVERED_BY]->(al2:Allowance)
-WITH co, totalCost, costs, scheduleImpact, requestedBy, vendorName, workAreas, systems,
-     collect(DISTINCT {id:al.id, name:al.name, amount:al.amount}) AS contractAllowances,
-     collect(DISTINCT {id:ctg.id, name:ctg.name, percent:ctg.percent}) AS contingencies,
-     collect(DISTINCT {id:upi.id, name:upi.name, unit:upi.unit, rate:upi.rate}) AS unitPrices,
-     collect(DISTINCT {id:al2.id, name:al2.name, amount:al2.amount}) AS coAllowances
-OPTIONAL MATCH (co)-[:HAS_ANALYSIS]->(ar:AnalysisRun)
-WITH co, totalCost, costs, scheduleImpact, requestedBy, vendorName, workAreas, systems,
-     contractAllowances, contingencies, unitPrices, coAllowances,
-     ar
-ORDER BY ar.timestamp DESC
-WITH co, totalCost, costs, scheduleImpact, requestedBy, vendorName, workAreas, systems,
-     contractAllowances, contingencies, unitPrices, coAllowances,
-     collect(ar)[0] AS latestAR
-OPTIONAL MATCH (latestAR)-[:HAS_METRIC]->(m:Metric)
-OPTIONAL MATCH (latestAR)-[:RECOMMENDS]->(rec:Recommendation)
-WITH co, totalCost, costs, scheduleImpact, requestedBy, vendorName, workAreas, systems,
-     contractAllowances, contingencies, unitPrices, coAllowances,
-     latestAR, m, rec
+OPTIONAL MATCH (co)-[:AFFECTS]->(wa:WorkArea)
+OPTIONAL MATCH (co)-[:IMPACTS]->(sch:Schedule)
 RETURN
   co.id AS changeOrder,
   co.title AS title,
   co.status AS status,
-  requestedBy,
-  vendorName,
-  workAreas,
-  systems,
-  totalCost,
-  costs,
-  scheduleImpact,
-  contractAllowances,
-  coAllowances,
-  contingencies,
-  unitPrices,
-  CASE WHEN latestAR IS NULL THEN NULL ELSE
-    { id: latestAR.id,
-      at: toString(latestAR.timestamp),
-      determination: latestAR.determination,
-      confidence: latestAR.confidence_overall,
-      metrics: CASE WHEN m IS NULL THEN NULL ELSE
-                  {coverage:m.coverage, clarity:m.clarity, consistency:m.consistency, precedent:m.precedentScore}
-                END,
-      recommendation: CASE WHEN rec IS NULL THEN NULL ELSE
-                  {action:rec.action, reason:rec.reason}
-                END
-    }
-  END AS analysis
-LIMIT 1
+  collect(DISTINCT sys.id) AS systems,
+  collect(DISTINCT wa.id)  AS workAreas,
+  collect(DISTINCT sch.id) AS schedules
+LIMIT 1;
 """
 
 Q4 = """
+// Q4: Commercial coverage (Allowance / Contingency / Unit Price)
 MATCH (co:ChangeOrder {id:$co_id})
 OPTIONAL MATCH (co)-[:COVERED_BY]->(alCO:Allowance)
 OPTIONAL MATCH (ct:Contract)
 OPTIONAL MATCH (ct)-[:HAS_ALLOWANCE]->(al:Allowance)
 OPTIONAL MATCH (ct)-[:HAS_CONTINGENCY]->(ctg:Contingency)
 OPTIONAL MATCH (ct)-[:HAS_UNIT_PRICE]->(upi:UnitPriceItem)
+WITH co,
+     [x IN collect(DISTINCT alCO) WHERE x IS NOT NULL |
+        {id:x.id, name:x.name, amount:x.amount, currency:coalesce(x.currency,'USD')}] AS directAllowances,
+     [x IN collect(DISTINCT al) WHERE x IS NOT NULL |
+        {id:x.id, name:x.name, amount:x.amount, currency:coalesce(x.currency,'USD')}] AS contractAllowances,
+     [x IN collect(DISTINCT ctg) WHERE x IS NOT NULL |
+        {id:x.id, name:x.name, percent:x.percent}] AS contingencies,
+     [x IN collect(DISTINCT upi) WHERE x IS NOT NULL |
+        {id:x.id, name:x.name, unit:x.unit, rate:x.rate, currency:coalesce(x.currency,'USD')}] AS unitPrices
 RETURN
-  co.id AS changeOrder,
+  co.id    AS changeOrder,
   co.title AS title,
   co.status AS status,
-  collect(DISTINCT {id:alCO.id, name:alCO.name, amount:alCO.amount}) AS directAllowances,
-  collect(DISTINCT {id:al.id, name:al.name, amount:al.amount}) AS contractAllowances,
-  collect(DISTINCT {id:ctg.id, name:ctg.name, percent:ctg.percent}) AS contingencies,
-  collect(DISTINCT {id:upi.id, name:upi.name, unit:upi.unit, rate:upi.rate}) AS unitPrices
-LIMIT 1
+  directAllowances,
+  contractAllowances,
+  contingencies,
+  unitPrices
+LIMIT 1;
 """
 
 Q5 = """
+// Q5: Latest analysis run with evidence + metrics + recommendation
 MATCH (co:ChangeOrder {id:$co_id})
 OPTIONAL MATCH (co)-[:HAS_ANALYSIS]->(ar:AnalysisRun)
 WITH co, ar ORDER BY ar.timestamp DESC
-WITH co, head(collect(ar)) AS latestAR
+WITH co, collect(ar)[0] AS latestAR
 OPTIONAL MATCH (latestAR)-[:HAS_METRIC]->(m:Metric)
-WITH co, latestAR, head(collect(m)) AS metric
 OPTIONAL MATCH (latestAR)-[:RECOMMENDS]->(rec:Recommendation)
-WITH co, latestAR, metric, head(collect(rec)) AS recommendation
 OPTIONAL MATCH (latestAR)-[:USES_EVIDENCE]->(ev:Evidence)
 OPTIONAL MATCH (ev)-[:EVIDENCE_FROM]->(ch:Chunk)
-WITH co, latestAR, metric, recommendation,
-     collect(DISTINCT {
-       id: ev.id, supports: ev.supports, confidence: ev.confidence, reason: ev.reason,
-       chunk: CASE WHEN ch IS NULL THEN NULL ELSE {id:ch.id, section:ch.section, text:substring(ch.text,0,160)+'...'} END
-     }) AS evidence
+WITH co, latestAR, m, rec,
+     collect(DISTINCT { id: ev.id,
+                        supports: ev.supports,
+                        confidence: ev.confidence,
+                        reason: ev.reason,
+                        chunk: CASE WHEN ch IS NULL THEN NULL ELSE {id:ch.id, section:ch.section, text:substring(ch.text,0,160)+'...'} END }) AS evidence
 RETURN
   co.id AS changeOrder,
   co.title AS title,
@@ -255,335 +197,440 @@ RETURN
       at: toString(latestAR.timestamp),
       determination: latestAR.determination,
       confidence: latestAR.confidence_overall,
-      metrics: CASE WHEN metric IS NULL THEN NULL ELSE
-                 {coverage:metric.coverage, clarity:metric.clarity, consistency:metric.consistency, precedent:metric.precedentScore}
+      metrics: CASE WHEN m IS NULL THEN NULL ELSE
+                 {coverage:m.coverage, clarity:m.clarity, consistency:m.consistency, precedent:m.precedentScore}
                END,
-      recommendation: CASE WHEN recommendation IS NULL THEN NULL ELSE
-                 {action:recommendation.action, reason:recommendation.reason}
+      recommendation: CASE WHEN rec IS NULL THEN NULL ELSE
+                 {action:rec.action, reason:rec.reason}
                END,
       evidence: evidence
     }
   END AS analysis
-LIMIT 1
+LIMIT 1;
 """
 
-# ===============================
-# Query runner
-# ===============================
-def run_query(query, params=None):
-    with driver.session() as s:
-        res = s.run(query, params or {})
-        return [r.data() for r in res]
-
-# ===============================
-# Summaries (Q1–Q6)
-# ===============================
-def summarize_q1(rows):
-    if not rows:
-        return "No entitlement evidence found."
-    d = rows[0]
-    title = d.get("title", "(untitled)")
-    status = d.get("status", "(unknown)")
-    systems = ", ".join(d.get("systems") or ["unspecified systems"])
-    areas = ", ".join(d.get("workAreas") or ["unspecified areas"])
-    n_contract = len(d.get("contractClauses") or [])
-    n_db = len(d.get("designBasisClauses") or [])
-    al = d.get("allowances") or []
-    al_txt = f"{al[0]['name']} (₹{al[0]['amount']})" if al and al[0].get("name") else "None"
-    evid = d.get("evidence") or []
-    avg_conf = round(sum([e.get("confidence") or 0 for e in evid]) / len(evid), 2) if evid else "N/A"
-    return (
-        f"**Change Order:** {d['changeOrder']} – {title}\n"
-        f"**Status:** {status}\n"
-        f"**Systems Affected:** {systems}\n"
-        f"**Work Areas:** {areas}\n"
-        f"**Contract Clauses Referenced:** {n_contract}\n"
-        f"**Design Basis References:** {n_db}\n"
-        f"**Average Evidence Confidence:** {avg_conf}\n"
-        f"**Allowance Coverage:** {al_txt}"
-    )
-
-def summarize_q2(rows):
-    if not rows:
-        return (
-            "**Query Type:** Precedent Change Orders\n"
-            "**Description:** Looks for COs sharing artifacts, WBS, systems, or work areas.\n"
-            "**Results:** None found."
-        )
-    lines = []
-    for r in rows:
-        matches = []
-        if r.get("matchedArtifacts"): matches.append("artifacts")
-        if r.get("matchedWBS"):       matches.append("WBS codes")
-        if r.get("matchedSystems"):   matches.append("systems")
-        if r.get("matchedWorkAreas"): matches.append("work areas")
-        match_list = ", ".join(matches) or "no overlap"
-        lines.append(f"- {r['similarCO']} ({r.get('status','')}) → {match_list}")
-    formatted = "\n".join(lines)
-    return (
-        f"**Query Type:** Precedent Change Orders\n"
-        f"**Description:** Looks for COs sharing artifacts, WBS, systems, or work areas.\n"
-        f"**Results:**\n{formatted}"
-    )
-
-def summarize_q3(rows):
-    if not rows:
-        return "No executive summary available."
-    d = rows[0]
-    title = d.get("title", "(untitled)")
-    areas = ", ".join(d.get("workAreas") or ["unspecified areas"])
-    systems = ", ".join(d.get("systems") or ["unspecified systems"])
-    total = d.get("totalCost") or 0
-    ar = d.get("analysis") or {}
-    det = ar.get("determination", "Unknown")
-    conf = ar.get("confidence", "N/A")
-    rec = ar.get("recommendation") or {}
-    return (
-        f"**Change Order:** {d['changeOrder']} – {title}\n"
-        f"**Total Estimated Cost:** ₹{total:,.0f}\n"
-        f"**Work Areas:** {areas}\n"
-        f"**Systems:** {systems}\n"
-        f"**AI Determination:** {det} (confidence {conf})\n"
-        f"**Recommendation:** {rec.get('action','—')}\n"
-        f"{rec.get('reason','')}"
-    )
-
-def summarize_q4(rows):
-    if not rows:
-        return "No commercial coverage information found."
-    d = rows[0]
-    da = d.get("directAllowances") or []
-    ca = d.get("contractAllowances") or []
-    cg = d.get("contingencies") or []
-    up = d.get("unitPrices") or []
-    da_txt = f"{da[0]['name']} (₹{da[0]['amount']})" if da and da[0].get("name") else "None"
-    ca_txt = f"{len(ca)} contract allowance(s)" if ca else "None"
-    cg_txt = f"{cg[0]['name']} ({cg[0]['percent']}%)" if cg else "None"
-    up_txt = f"{up[0]['name']} ({up[0]['unit']} @ ₹{up[0]['rate']})" if up else "None"
-    return (
-        f"**Change Order:** {d['changeOrder']} – {d.get('title','')}\n"
-        f"**Direct Allowance:** {da_txt}\n"
-        f"**Contract Allowances:** {ca_txt}\n"
-        f"**Contingency Coverage:** {cg_txt}\n"
-        f"**Unit Price Items:** {up_txt}"
-    )
-
-def summarize_q5(rows):
-    if not rows:
-        return "No analysis run found."
-    d = rows[0]
-    a = d.get("analysis")
-    if not a:
-        return "No analysis run recorded yet."
-    det = a.get("determination", "Unknown")
-    conf = a.get("confidence", "N/A")
-    rec = a.get("recommendation") or {}
-    action = rec.get("action", "No recommendation")
-    reason = rec.get("reason", "")
-    n_evid = len(a.get("evidence") or [])
-    return (
-        f"**Analysis:**\n"
-        f"**Entitlement:** {det} (confidence {conf})\n"
-        f"**Recommendation:** {action}\n"
-        f"{reason}\n"
-        f"**Evidence Items Linked:** {n_evid}"
-    )
-
-# ===============================
-# Q6: NL → Cypher (OpenAI) + robust fallback
-# ===============================
-def _get_openai_client():
-    if not _OPENAI_AVAILABLE:
-        raise RuntimeError("OpenAI SDK not installed. Add `openai` package.")
-    api_key = _get("OPENAI_API_KEY", "OPENAI_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY missing in secrets/env.")
-    return OpenAI(api_key=api_key)
-
-Q6_SYSTEM_PROMPT = (
-    "You are an expert Neo4j Cypher assistant for a construction entitlement knowledge graph.\n"
-    "Translate the user's English question into a single Cypher query for Neo4j 5.x.\n"
-    "Labels you may use: ChangeOrder, Spec, RFI, Document, Chunk, System, WorkArea, WBS, CostItem, "
-    "Allowance, AnalysisRun, Metric, Recommendation, Evidence, Person, Vendor.\n"
-    "Relationships: REFERS_TO, HAS_COST_ITEM, CODED_AS, MODIFIES, AFFECTS, COVERED_BY, HAS_EVIDENCE, "
-    "EVIDENCE_FROM, HAS_CHUNK, CITES, HAS_ANALYSIS, HAS_METRIC, RECOMMENDS, IMPACTS.\n"
-    "Interpret 'pending/open' broadly: statuses matching (?i)^pending.*|^open$|^in review$.\n"
-    "When checking existence of a pattern with a predicate, ALWAYS use the Cypher 5 form:\n"
-    "  EXISTS { MATCH ... WHERE ... }\n"
-    "Do NOT write 'EXISTS((...)) WHERE ...' and do NOT use SQL constructs like SELECT or MAX().\n"
-    "To select the latest AnalysisRun per CO:\n"
-    "  MATCH (co)-[:HAS_ANALYSIS]->(ar)\n"
-    '  WITH co, ar ORDER BY ar.timestamp DESC\n'
-    "  WITH co, collect(ar)[0] AS lastAR\n"
-    "Return simple aliases like id, title, status. Only output Cypher."
-)
-
-def generate_cypher_from_english(prompt: str, co_id_hint: str | None):
-    client = _get_openai_client()
-    user_msg = prompt
-    if ("this" in prompt.lower() or "current" in prompt.lower()) and co_id_hint:
-        user_msg += f"\n\n(Current CO id is '{co_id_hint}'. Use it if relevant.)"
-    resp = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": Q6_SYSTEM_PROMPT},
-            {"role": "user", "content": user_msg}
-        ],
-        temperature=0.1
-    )
-    cypher = resp.choices[0].message.content.strip()
-    if "```" in cypher:
-        cypher = cypher.replace("```cypher", "").replace("```", "").strip()
-    return cypher
-
-def robust_q6_fallback(prompt: str, co_id_hint: str | None) -> str:
-    p = prompt.lower()
-    pending_regex = "(?i)^pending.*|^open$|^in review$"
-
-    # A) Verified: "pending ... modular (wall)"
-    if "pending" in p and ("modular" in p or "modular wall" in p or "modular walls" in p):
-        return f"""
+# ─────────────────────────────────────────────────────────────
+# Q6: English → Cypher (read-only)
+# ─────────────────────────────────────────────────────────────
+def robust_q6_fallback(nl: str, co_id: Optional[str]) -> Optional[str]:
+    p = (nl or "").lower().strip()
+    # Pending COs affecting/mentioning modular
+    if ("pending" in p) and ("modular" in p):
+        return textwrap.dedent("""
         MATCH (co:ChangeOrder)
-        WHERE co.status =~ '{pending_regex}'
+        WHERE toLower(co.status) CONTAINS 'pending'
         OPTIONAL MATCH (co)-[:MODIFIES]->(s:System)
         OPTIONAL MATCH (co)-[:REFERS_TO]->(sp:Spec)
         OPTIONAL MATCH (co)-[:HAS_EVIDENCE]->(:Evidence)-[:EVIDENCE_FROM]->(ch:Chunk)
         WITH co,
-             collect(DISTINCT toLower(s.id))     AS s_ids,
-             collect(DISTINCT toLower(sp.title)) AS sp_titles,
-             collect(DISTINCT toLower(ch.text))  AS texts
-        WHERE any(x IN s_ids     WHERE x CONTAINS 'modular')
+             collect(DISTINCT toLower(coalesce(s.id,'')))   AS s_ids,
+             collect(DISTINCT toLower(coalesce(sp.title,''))) AS sp_titles,
+             collect(DISTINCT toLower(coalesce(ch.text,'')))  AS texts
+        WHERE any(x IN s_ids WHERE x CONTAINS 'modular')
            OR any(t IN sp_titles WHERE t CONTAINS 'modular')
-           OR any(tx IN texts    WHERE tx CONTAINS 'modular wall')
+           OR any(tx IN texts WHERE tx CONTAINS 'modular')
         RETURN co.id AS id, co.title AS title, co.status AS status
         ORDER BY id
+        """)
+    # COs marked Not Entitled in last completed analysis
+    if ("not entitled" in p) and ("last" in p or "latest" in p):
+        return textwrap.dedent("""
+        MATCH (ar:AnalysisRun {status:'completed'})
+        WITH ar ORDER BY ar.timestamp DESC LIMIT 1
+        MATCH (ar)-[:RECOMMENDS]->(rec:Recommendation {determination:'Not Entitled'})
+        MATCH (rec)<-[:HAS_RECOMMENDATION]-(co:ChangeOrder)
+        RETURN co.id AS id, co.title AS title, rec.determination AS determination, rec.confidence_overall AS confidence
+        ORDER BY id
+        """)
+    # RFIs this CO references
+    if ("rfi" in p) and (("this co" in p) or ("current co" in p) or co_id):
+        cid = co_id or ""
+        return f"""
+        MATCH (co:ChangeOrder {{id:'{cid}'}})-[:REFERS_TO]->(d:Document)-[:IS_A]->(:DocType {{name:'RFIs'}})
+        RETURN d.id AS id, coalesce(d.title,'') AS title, coalesce(d.status,'') AS status
+        ORDER BY id
         """
+    return None
 
-    # B) “last AI analysis … not entitled”
-    if ("last" in p or "most recent" in p) and ("analysis" in p) and ("not entitled" in p or "not-entitled" in p):
-        return """
-        MATCH (co:ChangeOrder)-[:HAS_ANALYSIS]->(ar:AnalysisRun)
-        WITH co, ar
-        ORDER BY ar.timestamp DESC
-        WITH co, collect(ar)[0] AS lastAR
-        WHERE toLower(lastAR.determination) CONTAINS 'not entitled'
-        RETURN co.id AS id, co.title AS title, lastAR.determination AS determination,
-               lastAR.confidence_overall AS confidence
-        ORDER BY confidence DESC, id
-        """
+def english_to_cypher(nl: str, co_id: Optional[str]) -> str:
+    fallback = robust_q6_fallback(nl, co_id)
+    if fallback:
+        return fallback
+    if not OPENAI_API_KEY:
+        return "MATCH (co:ChangeOrder) RETURN co.id AS id, co.title AS title, co.status AS status ORDER BY id LIMIT 25;"
+    import openai  # type: ignore
+    openai.api_key = OPENAI_API_KEY
+    system = """Translate English to READ-ONLY Cypher for Neo4j 5. Never use MERGE/CREATE/DELETE/SET/REMOVE/DETACH/LOAD/ APOC.
+Return tidy columns with stable names."""
+    resp = openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[{"role":"system","content":system},
+                  {"role":"user","content":f"English: {nl}\nCO hint: {co_id or ''}"}],
+        temperature=0.1,
+    )
+    q = resp["choices"][0]["message"]["content"].strip()
+    if is_write_query(" " + q + " "):
+        return "MATCH (co:ChangeOrder) RETURN co.id AS id, co.title AS title, co.status AS status ORDER BY id LIMIT 25;"
+    return q
 
-    # C) Generic "show something" fallback
-    return """
-    MATCH (co:ChangeOrder)
-    RETURN co.id AS id, co.title AS title, co.status AS status
-    ORDER BY co.id LIMIT 10
-    """
-
-def run_q6_with_fallback(nl_prompt: str, co_id_hint: str | None):
-    """
-    Try LLM-generated Cypher. If it returns 0 rows OR raises an error,
-    run the robust fallback.
-    """
-    try:
-        gen_cypher = generate_cypher_from_english(nl_prompt, co_id_hint=co_id_hint)
-        rows = run_query(gen_cypher)
-        if rows:
-            return gen_cypher, rows, False
-        fb = robust_q6_fallback(nl_prompt, co_id_hint)
-        rows_fb = run_query(fb)
-        return fb, rows_fb, True
-    except Exception:
-        fb = robust_q6_fallback(nl_prompt, co_id_hint)
-        rows_fb = run_query(fb)
-        return fb, rows_fb, True
-
-def summarize_q6(question: str, rows: list):
+# ─────────────────────────────────────────────────────────────
+# Summaries
+# ─────────────────────────────────────────────────────────────
+def summarize_q1(rows):
     if not rows:
-        return f"**Question:** {question}\n**Result Count:** 0\n**Details:** No records found."
-    lines = []
-    for i, r in enumerate(rows[:10], 1):
-        id_   = r.get("id") or r.get("changeOrder") or "—"
-        title = r.get("title", "")
-        status = r.get("status")
-        det = r.get("determination"); conf = r.get("confidence")
-        tail = ""
-        if det is not None or conf is not None:
-            bits = []
-            if det is not None:  bits.append(f"determination: {det}")
-            if conf is not None: bits.append(f"confidence: {conf}")
-            tail = f" *({'; '.join(bits)})*"
-        elif status:
-            tail = f" *({status})*"
-        lines.append(f"{i}. **{id_}** — {title}{tail}")
-    return f"**Question:** {question}\n\n **Result Count:** {len(rows)}\n**Details:**\n" + "\n".join(lines)
+        return "\n".join([
+            safe_md("Heading", "Entitlement (Q1)"),
+            safe_md("Status", "No data returned"),
+            safe_md("Details", "Check CO id or evidence wiring."),
+        ])
+    r = rows[0]
+    return "\n".join([
+        safe_md("Heading", "Entitlement (Q1)"),
+        safe_md("Change Order", f"{r.get('changeOrder','')} — {r.get('title','')}"),
+        safe_md("Status", r.get("status","")),
+        safe_md("Referenced", ", ".join(r.get("referencedArtifacts",[])) or "—"),
+        safe_md("Cited Evidence", f"{len(r.get('citedEvidence',[]))} items"),
+        safe_md("Contract Clauses", f"{len(r.get('contractClauses',[]))} items"),
+    ])
 
-# ===============================
-# UI helpers
-# ===============================
-def display_summary(title: str, summary_text: str):
-    st.markdown(f"### 🗣️ {title}")
-    st.markdown(summary_text)
+def summarize_q2(rows):
+    if not rows:
+        return "\n".join([
+            safe_md("Heading", "Precedent (Q2)"),
+            safe_md("Result", "No similar change orders found."),
+            safe_md("Details", "Try broader matches (WBS/Systems/Artifacts)."),
+        ])
+    items = []
+    for r in rows:
+        parts = [r.get("similarCO","")]
+        if r.get("title"): parts.append(r["title"])
+        if r.get("status"): parts.append(f"[{r['status']}]")
+        if r.get("matchedWBS"): parts.append("WBS:" + ",".join(r["matchedWBS"]))
+        if r.get("matchedSystems"): parts.append("SYS:" + ",".join(r["matchedSystems"]))
+        if r.get("matchedArtifacts"): parts.append("ART:" + ",".join(r["matchedArtifacts"]))
+        items.append("• " + " ".join(parts))
+    return "\n".join([
+        safe_md("Heading", "Precedent (Q2)"),
+        safe_md("Count", str(len(rows))),
+        safe_md("Details", "\n" + "\n".join(items)),
+    ])
 
-QUERY_OPTIONS = {
-    "Entitlement (Q1)": (Q1, summarize_q1),
-    "Precedent (Q2)": (Q2, summarize_q2),
-    "Executive Summary (Q3)": (Q3, summarize_q3),
-    "Coverage (Q4)": (Q4, summarize_q4),
-    "Analysis & Evidence (Q5)": (Q5, summarize_q5),
-    "Generic (Q6)": (None, None),  # handled separately
+def summarize_q3(rows):
+    if not rows:
+        return "\n".join([
+            safe_md("Heading", "Impact Summary (Q3)"),
+            safe_md("Result", "No systems/work areas/schedules linked."),
+        ])
+    r = rows[0]
+    return "\n".join([
+        safe_md("Heading", "Impact Summary (Q3)"),
+        safe_md("Change Order", f"{r.get('changeOrder','')} — {r.get('title','')}"),
+        safe_md("Status", r.get("status","")),
+        safe_md("Systems", ", ".join(r.get("systems",[])) or "—"),
+        safe_md("Work Areas", ", ".join(r.get("workAreas",[])) or "—"),
+        safe_md("Schedules", ", ".join(r.get("schedules",[])) or "—"),
+    ])
+
+def summarize_q4(rows):
+    if not rows:
+        return "\n".join([
+            "**Heading:** Cost Coverage (Q4)",
+            "**Result:** No coverage found.",
+            "**Details:** No Allowance/Contingency/Unit Price matched."
+        ])
+    r = rows[0]
+    lines = ["**Heading:** Cost Coverage (Q4)"]
+    lines.append(f"**Change Order:** {r.get('changeOrder','')} — {r.get('title','')}")
+    da = r.get("directAllowances",[])
+    ca = r.get("contractAllowances",[])
+    cg = r.get("contingencies",[])
+    up = r.get("unitPrices",[])
+    def fmt_allow(a): return f"{a.get('id','')} ({a.get('name','')}): {a.get('amount','')} {a.get('currency','')}"
+    def fmt_contg(c): return f"{c.get('id','')} ({c.get('name','')}): {c.get('percent','')}%"
+    def fmt_upi(u):  return f"{u.get('id','')} ({u.get('name','')}): {u.get('rate','')}/{u.get('unit','')} {u.get('currency','')}"
+    lines.append("**Direct Allowances:** " + ("\n" + "\n".join("• " + fmt_allow(a) for a in da) if da else "—"))
+    lines.append("**Contract Allowances:** " + ("\n" + "\n".join("• " + fmt_allow(a) for a in ca) if ca else "—"))
+    lines.append("**Contingency:** " + ("\n" + "\n".join("• " + fmt_contg(c) for c in cg) if cg else "—"))
+    lines.append("**Unit Prices:** " + ("\n" + "\n".join("• " + fmt_upi(u) for u in up) if up else "—"))
+    return "\n".join(lines)
+
+def summarize_q5(rows):
+    if not rows:
+        return "\n".join([
+            "**Heading:** Latest AI Analysis (Q5)",
+            "**Result:** No analysis found."
+        ])
+    r = rows[0]
+    if isinstance(r.get("analysis"), dict):
+        a = r["analysis"]
+        lines = [
+            "**Heading:** Latest AI Analysis (Q5)",
+            f"**Change Order:** {r.get('changeOrder','')} — {r.get('title','')}",
+            f"**Determination:** {a.get('determination','—')}",
+            f"**Confidence:** {a.get('confidence','—')}",
+            f"**Analyzed At:** {a.get('at','—')}",
+        ]
+        m = a.get("metrics") or {}
+        if m:
+            lines.append(f"**Metrics:** coverage {m.get('coverage','—')}, clarity {m.get('clarity','—')}, consistency {m.get('consistency','—')}, precedent {m.get('precedent','—')}")
+        rec = a.get("recommendation") or {}
+        if rec:
+            lines.append(f"**Recommendation:** {rec.get('action','—')}")
+            if rec.get("reason"): lines.append(f"**Reason:** {rec['reason']}")
+        ev = a.get("evidence") or []
+        lines.append(f"**Evidence Items:** {len(ev)}")
+        return "\n".join(lines)
+    # Back-compat flat
+    det = r.get("determination","—")
+    conf = r.get("confidence","—")
+    at   = r.get("analyzedAt","—")
+    evc  = r.get("evidenceCount",0)
+    return "\n".join([
+        "**Heading:** Latest AI Analysis (Q5)",
+        f"**Change Order:** {r.get('changeOrder','')} — {r.get('title','')}",
+        f"**Determination:** {det}",
+        f"**Confidence:** {conf}",
+        f"**Evidence Items:** {evc}",
+        f"**Analyzed At:** {at}"
+    ])
+
+def summarize_q6(nl: str, rows: List[Dict[str,Any]]) -> str:
+    n = len(rows)
+    if n == 0:
+        return "\n".join([
+            safe_md("Heading", "Generic (Q6)"),
+            safe_md("Question", nl),
+            safe_md("Result Count", "0"),
+            safe_md("Details", "No records found."),
+        ])
+    details = []
+    for i, r in enumerate(rows, 1):
+        items = [f"{k}: {v}" for k, v in r.items()]
+        details.append(f"{i}. " + ", ".join(items))
+    return "\n".join([
+        safe_md("Heading", "Generic (Q6)"),
+        safe_md("Question", nl),
+        safe_md("Result Count", str(n)),
+        safe_md("Details", "\n" + "\n".join(details)),
+    ])
+
+# ─────────────────────────────────────────────────────────────
+# Document Library helpers
+# ─────────────────────────────────────────────────────────────
+def q_docs_by_category():
+    return run_query("""
+    MATCH (c:DocCategory)
+    RETURN
+      c.name AS Category,
+      count { (:DocType)-[:IN_CATEGORY]->(c) }  AS DocTypes,
+      count { (:Document)-[:IN_CATEGORY]->(c) } AS Documents
+    ORDER BY Category
+    """)
+
+def q_docs_by_type():
+    return run_query("""
+    MATCH (t:DocType)-[:IN_CATEGORY]->(c:DocCategory)
+    RETURN
+      c.name AS Category,
+      t.name AS Type,
+      count { (:Document)-[:IS_A]->(t) } AS Documents
+    ORDER BY Category, Type
+    """)
+
+def q_doc_list(category=None, dtype=None, search=None, limit=100):
+    where = []
+    if category:
+        safe_cat = category.replace("'", "\\'")
+        where.append("c.name = '" + safe_cat + "'")
+    if dtype:
+        safe_dtype = dtype.replace("'", "\\'")
+        where.append("t.name = '" + safe_dtype + "'")
+    where_clause = "WHERE " + " AND ".join(where) if where else ""
+    text_filter = ""
+    if search:
+        s = search.lower().replace("'", "\\'")
+        text_filter = f" WHERE toLower(d.id) CONTAINS '{s}' OR toLower(coalesce(d.title,'')) CONTAINS '{s}' "
+    cypher = f"""
+    MATCH (d:Document)-[:IS_A]->(t:DocType)-[:IN_CATEGORY]->(c:DocCategory)
+    {where_clause}
+    OPTIONAL MATCH (d)-[:HAS_CHUNK]->(ch:Chunk)
+    WITH d, t, c, count(ch) AS chunks
+    {text_filter}
+    RETURN
+      d.id   AS id,
+      coalesce(d.title,'') AS title,
+      coalesce(d.type,'')  AS rawType,
+      t.name AS docType,
+      c.name AS category,
+      coalesce(d.status,'') AS status,
+      chunks AS chunks
+    ORDER BY category, docType, id
+    LIMIT {int(limit)}
+    """
+    return run_query(cypher)
+
+# ─────────────────────────────────────────────────────────────
+# UI
+# ─────────────────────────────────────────────────────────────
+st.title("DocLabs — Knowledge Graph Q&A")
+st.caption("Ask in English, run Cypher on Neo4j, and get evidence-based explanations for Kevin.")
+
+QUERY_CHOICES = {
+    "Entitlement (Q1)": Q1,
+    "Precedent (Q2)": Q2,
+    "Impact Summary (Q3)": Q3,
+    "Cost Coverage (Q4)": Q4,
+    "Latest AI Analysis (Q5)": Q5,
+    "Generic (Q6)": "GENERIC",
 }
 
-# ===============================
-# UI
-# ===============================
-st.markdown("## DocLabs — Knowledge Graph Q&A")
-st.caption("Ask in English, run Cypher on Neo4j, and get an evidence-based explanation for Kevin.")
+with st.form("query_form"):
+    qtype = st.selectbox("Query Type", list(QUERY_CHOICES.keys()), index=0)
+    co_id = st.text_input("CO id", value="CO-042")
+    kevin_q = st.text_input("Kevin’s question (for Q6)", value="")
+    submitted = st.form_submit_button("Run")
 
-choice = st.selectbox("Query Type", list(QUERY_OPTIONS.keys()), index=0)
-co_id = st.text_input("CO id", "CO-042")
-free_text = st.text_area("Kevin’s question (optional free text)", placeholder="e.g., Show me all pending change orders affecting modular wall systems.")
-
-if st.button("Run", type="primary"):
-    params = {"co_id": co_id}
-    summary_text = ""
-    cypher_for_display = ""
-    rows = []
-
+if submitted:
     try:
-        if choice != "Generic (Q6)":
-            query, summarizer = QUERY_OPTIONS[choice]
-            rows = run_query(query, params)
-            summary_text = summarizer(rows)
-            cypher_for_display = query.replace("$co_id", f"'{co_id}'")
-        else:
-            if not free_text.strip():
-                st.warning("Please type a question in plain English first.")
-            else:
-                cypher_used, rows, used_fallback = run_q6_with_fallback(free_text.strip(), co_id_hint=co_id)
-                cypher_for_display = cypher_used
-                summary_text = summarize_q6(free_text.strip(), rows)
-                if used_fallback and rows:
-                    st.info("Returned results using robust fallback logic (model’s first query had zero matches or errored).")
+        if qtype == "Entitlement (Q1)":
+            cypher = Q1
+            rows = run_query(cypher, {"co_id": co_id})
+            st.markdown("## 🗣️ Plain-English Summary")
+            show_summary([summarize_q1(rows)])
+            st.markdown("## 🧪 Cypher used")
+            st.code(cypher, language="cypher")
+            with st.expander("Raw results"):
+                st.write(rows or [])
+
+        elif qtype == "Precedent (Q2)":
+            cypher = Q2
+            rows = run_query(cypher, {"co_id": co_id})
+            st.markdown("## 🗣️ Plain-English Summary")
+            show_summary([summarize_q2(rows)])
+            st.markdown("## 🧪 Cypher used")
+            st.code(cypher, language="cypher")
+            with st.expander("Raw results"):
+                st.write(rows or [])
+
+        elif qtype == "Impact Summary (Q3)":
+            cypher = Q3
+            rows = run_query(cypher, {"co_id": co_id})
+            st.markdown("## 🗣️ Plain-English Summary")
+            show_summary([summarize_q3(rows)])
+            st.markdown("## 🧪 Cypher used")
+            st.code(cypher, language="cypher")
+            with st.expander("Raw results"):
+                st.write(rows or [])
+
+        elif qtype == "Cost Coverage (Q4)":
+            cypher = Q4
+            rows = run_query(cypher, {"co_id": co_id})
+            st.markdown("## 🗣️ Plain-English Summary")
+            st.markdown(summarize_q4(rows))
+            st.markdown("## 🧪 Cypher used")
+            st.code(cypher, language="cypher")
+            with st.expander("Raw results"):
+                st.write(rows or [])
+
+        elif qtype == "Latest AI Analysis (Q5)":
+            cypher = Q5
+            rows = run_query(cypher, {"co_id": co_id})
+            st.markdown("## 🗣️ Plain-English Summary")
+            st.markdown(summarize_q5(rows))
+            st.markdown("## 🧪 Cypher used")
+            st.code(cypher, language="cypher")
+            with st.expander("Raw results"):
+                st.write(rows or [])
+
+        else:  # Generic (Q6)
+            cypher = english_to_cypher(kevin_q or "", co_id)
+            rows = run_query(cypher)
+            st.markdown("## 🗣️ Plain-English Summary")
+            st.markdown(summarize_q6(kevin_q or "", rows))
+            st.markdown("## 🧪 Cypher used")
+            st.code(cypher, language="cypher")
+            with st.expander("Raw results"):
+                st.write(rows or [])
+
     except Exception as e:
         st.error(f"Query failed: {e}")
-        rows = []
-        if choice == "Generic (Q6)":
-            summary_text = (
-                f"**Question:** {free_text.strip()}\n"
-                f"**Result Count:** 0\n"
-                f"**Details:** Error generating or running Cypher."
-            )
+
+st.markdown("---")
+
+# ─────────────────────────────────────────────────────────────
+# 📚 Document Library
+# ─────────────────────────────────────────────────────────────
+st.markdown("## 📚 Document Library")
+
+cols = st.columns(2)
+with cols[0]:
+    try:
+        cats = q_docs_by_category()
+        st.metric("Categories", len(cats) if cats else 0)
+    except Exception as e:
+        cats = []
+        st.caption(f"Counts by category unavailable: {e}")
+
+with cols[1]:
+    try:
+        types = q_docs_by_type()
+        uniq_types = len({(r["Category"], r["Type"]) for r in types}) if types else 0
+        st.metric("Doc Types", uniq_types)
+    except Exception as e:
+        types = []
+        st.caption(f"Counts by type unavailable: {e}")
+
+with st.expander("Counts by Category & Type", expanded=False):
+    if cats:
+        st.markdown("**By Category**")
+        st.dataframe(pd.DataFrame(cats))
+    if types:
+        st.markdown("**By Type**")
+        st.dataframe(pd.DataFrame(types))
+
+st.markdown("### Browse")
+lcol, rcol = st.columns([2, 3])
+
+with lcol:
+    cat_options = ["(any)"] + (sorted({r["Category"] for r in types}) if types else [])
+    category = st.selectbox("Category", cat_options, index=0)
+    if category != "(any)":
+        type_options = ["(any)"] + [r["Type"] for r in types if r["Category"] == category]
+    else:
+        type_options = ["(any)"] + (sorted({r["Type"] for r in types}) if types else [])
+    dtype = st.selectbox("Doc Type", type_options, index=0)
+    search = st.text_input("Search (id/title contains)", value="")
+    limit = st.number_input("Limit", min_value=10, max_value=500, value=100, step=10)
+    browse = st.button("🔎 List documents")
+
+with rcol:
+    if browse:
+        cat_arg = None if category == "(any)" else category
+        type_arg = None if dtype == "(any)" else dtype
+        try:
+            rows = q_doc_list(category=cat_arg, dtype=type_arg, search=search.strip() or None, limit=int(limit))
+            if rows:
+                st.dataframe(pd.DataFrame(rows), use_container_width=True)
+            else:
+                st.info("No documents matched your filters.")
+        except Exception as e:
+            st.error(f"Browse failed: {e}")
+
+with st.expander("Orphans (debug)"):
+    try:
+        orphans = run_query("""
+        MATCH (c:DocCategory)
+        WHERE NOT EXISTS { MATCH (:DocType)-[:IN_CATEGORY]->(c) }
+          AND NOT EXISTS { MATCH (:Document)-[:IN_CATEGORY]->(c) }
+        RETURN 'Orphan Category' AS kind, c.name AS name
+        UNION ALL
+        MATCH (t:DocType)
+        WHERE NOT EXISTS { MATCH (t)-[:IN_CATEGORY]->(:DocCategory) }
+        RETURN 'Orphan DocType' AS kind, t.name AS name
+        """)
+        if orphans:
+            st.dataframe(pd.DataFrame(orphans))
         else:
-            summary_text = "No results."
-
-    # 1) Summary
-    st.subheader("🗣️ Plain-English Summary")
-    display_summary(choice, summary_text)
-
-    # 2) Cypher
-    st.subheader("🧪 Cypher used")
-    st.code(cypher_for_display or "-- no cypher generated --", language="cypher")
-
-    # 3) Raw Results
-    st.subheader("📦 Raw results")
-    st.json(rows, expanded=False)
+            st.caption("No orphan categories or doctypes 🎉")
+    except Exception as e:
+        st.caption(f"Orphan check unavailable: {e}")
