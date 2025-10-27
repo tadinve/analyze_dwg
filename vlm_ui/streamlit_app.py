@@ -6,11 +6,6 @@ import requests
 
 st.title("Construction Plan Q&A (VLM)")
 
-# API key input at the top
-api_key = st.text_input("Enter your OpenAI API Key", type="password")
-if not api_key:
-    st.warning("Please enter your OpenAI API key to use the app.")
-
 uploaded_file = st.file_uploader(
     "Upload a construction plan image or PDF",
     type=["png", "jpg", "jpeg", "gif", "pdf"]
@@ -49,9 +44,9 @@ question = st.text_input("Ask a question about the plan (for images only):")
 # Call FastAPI VLM backend
 VLM_API_URL = os.environ.get("VLM_API_URL", "http://localhost:8080/describe-image/")
 
-def call_vlm_api(image_bytes, question, api_key):
+def call_vlm_api(image_bytes, question):
     files = {"image": ("image.png", image_bytes, "image/png")}
-    data = {"question": question, "api_key": api_key}
+    data = {"question": question}
     try:
         response = requests.post(VLM_API_URL, files=files, data=data)
         if response.status_code == 200:
@@ -61,7 +56,7 @@ def call_vlm_api(image_bytes, question, api_key):
     except Exception as e:
         return f"API Error: {e}"
 
-if uploaded_file and api_key:
+if uploaded_file and question:
     filetype = uploaded_file.type
     if filetype == "application/pdf":
         uploaded_file.seek(0)
@@ -72,7 +67,7 @@ if uploaded_file and api_key:
             st.image(img_bytes, caption=f"Page {idx+1}", width='stretch')
             if question:
                 st.write(f"Processing your question for page {idx+1}...")
-                answer = call_vlm_api(img_bytes, question, api_key)
+                answer = call_vlm_api(img_bytes, question)
                 st.success(f"Answer for Page {idx+1}:")
                 st.write(answer)
     else:
@@ -80,8 +75,6 @@ if uploaded_file and api_key:
         image_bytes = uploaded_file.read()
         if question:
             st.write("Processing your question...")
-            answer = call_vlm_api(image_bytes, question, api_key)
+            answer = call_vlm_api(image_bytes, question)
             st.success("Answer:")
             st.write(answer)
-elif uploaded_file and question and not api_key:
-    st.warning("Please provide your OpenAI API key.")

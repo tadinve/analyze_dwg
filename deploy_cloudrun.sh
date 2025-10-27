@@ -8,8 +8,12 @@ PROJECT_ID="p3-search"
 REGION="us-central1"
 VLM_API_IMAGE="gcr.io/$PROJECT_ID/vlm-api"
 VLM_UI_IMAGE="gcr.io/$PROJECT_ID/vlm-ui"
+OPENAI_API_KEY="$1"
 
-
+if [ -z "$OPENAI_API_KEY" ]; then
+  echo "Usage: $0 <OPENAI_API_KEY>"
+  exit 1
+fi
 
 echo "Building VLM API Docker image..."
 docker buildx build --platform linux/amd64 -t $VLM_API_IMAGE ./vlm_api
@@ -32,6 +36,12 @@ gcloud run deploy vlm-api \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
+  --set-env-vars OPENAI_API_KEY=$OPENAI_API_KEY \
+  --timeout 600 \
+  --max-instances 10 \
+  --min-instances 0 \
+  --concurrency 80 \
+  --cpu-throttling \
   --project $PROJECT_ID
 
 VLM_API_URL=$(gcloud run services describe vlm-api --platform managed --region $REGION --project $PROJECT_ID --format 'value(status.url)')
@@ -43,6 +53,11 @@ gcloud run deploy vlm-ui \
   --region $REGION \
   --allow-unauthenticated \
   --set-env-vars VLM_API_URL=$VLM_API_URL/describe-image/ \
+  --timeout 600 \
+  --max-instances 10 \
+  --min-instances 0 \
+  --concurrency 80 \
+  --cpu-throttling \
   --project $PROJECT_ID
 
 echo "Deployment complete!"

@@ -2,18 +2,18 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 import openai
 import base64
+import os
 
 app = FastAPI()
 
 @app.post("/describe-image/")
 def describe_image(
-    api_key: str = Form(...),
     question: str = Form(...),
     image: UploadFile = File(...)
 ):
     image_bytes = image.file.read()
     img_b64 = base64.b64encode(image_bytes).decode("utf-8")
-    openai.api_key = api_key
+    openai.api_key = os.environ.get("OPENAI_API_KEY")
     try:
         response = openai.chat.completions.create(
             model="gpt-4o",
