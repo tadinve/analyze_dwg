@@ -1,10 +1,13 @@
 # app.py
+import json
 import textwrap
 from typing import Dict, Any, List, Optional
+import os
 
 import streamlit as st
 import pandas as pd
 from neo4j import GraphDatabase, basic_auth
+from PIL import Image
 
 # ─────────────────────────────────────────────────────────────
 # Setup & Secrets
@@ -73,7 +76,7 @@ RETURN
 LIMIT 1;
 """
 
-# Q2 rewritten WITHOUT APOC (uses id lists to intersect)
+# Q2 without APOC (portable)
 Q2 = """
 // Q2: Precedent COs similar to this CO (shared artifacts / WBS / systems)
 MATCH (co:ChangeOrder {id:$co_id})
@@ -88,7 +91,6 @@ WITH co, artIds, wbsCodes, collect(DISTINCT sys.id) AS systems
 
 MATCH (other:ChangeOrder) WHERE other.id <> co.id
 
-// Collect comparable features for other COs
 OPTIONAL MATCH (other)-[:REFERS_TO]->(a)
 WITH co, other, artIds, wbsCodes, systems,
      collect(DISTINCT coalesce(a.id, a.number, a.title)) AS oArtIds
@@ -101,7 +103,6 @@ OPTIONAL MATCH (other)-[:MODIFIES]->(os:System)
 WITH co, other, artIds, wbsCodes, systems, oArtIds, oWbs,
      collect(DISTINCT os.id) AS oSys
 
-// Compute intersections
 WITH co, other,
      [x IN oArtIds WHERE x IS NOT NULL AND x IN artIds] AS sharedArtIds,
      [x IN oWbs    WHERE x IS NOT NULL AND x IN wbsCodes] AS sharedWbs,
@@ -109,7 +110,6 @@ WITH co, other,
 
 WHERE size(sharedArtIds) > 0 OR size(sharedWbs) > 0 OR size(sharedSys) > 0
 
-// For display, fetch artifact labels for matched IDs
 OPTIONAL MATCH (other)-[:REFERS_TO]->(ra)
 WHERE coalesce(ra.id, ra.number, ra.title) IN sharedArtIds
 WITH co, other, sharedWbs, sharedSys,
@@ -214,7 +214,6 @@ LIMIT 1;
 # ─────────────────────────────────────────────────────────────
 def robust_q6_fallback(nl: str, co_id: Optional[str]) -> Optional[str]:
     p = (nl or "").lower().strip()
-    # Pending COs affecting/mentioning modular
     if ("pending" in p) and ("modular" in p):
         return textwrap.dedent("""
         MATCH (co:ChangeOrder)
@@ -223,7 +222,7 @@ def robust_q6_fallback(nl: str, co_id: Optional[str]) -> Optional[str]:
         OPTIONAL MATCH (co)-[:REFERS_TO]->(sp:Spec)
         OPTIONAL MATCH (co)-[:HAS_EVIDENCE]->(:Evidence)-[:EVIDENCE_FROM]->(ch:Chunk)
         WITH co,
-             collect(DISTINCT toLower(coalesce(s.id,'')))   AS s_ids,
+             collect(DISTINCT toLower(coalesce(s.id,'')))     AS s_ids,
              collect(DISTINCT toLower(coalesce(sp.title,''))) AS sp_titles,
              collect(DISTINCT toLower(coalesce(ch.text,'')))  AS texts
         WHERE any(x IN s_ids WHERE x CONTAINS 'modular')
@@ -232,7 +231,6 @@ def robust_q6_fallback(nl: str, co_id: Optional[str]) -> Optional[str]:
         RETURN co.id AS id, co.title AS title, co.status AS status
         ORDER BY id
         """)
-    # COs marked Not Entitled in last completed analysis
     if ("not entitled" in p) and ("last" in p or "latest" in p):
         return textwrap.dedent("""
         MATCH (ar:AnalysisRun {status:'completed'})
@@ -242,7 +240,6 @@ def robust_q6_fallback(nl: str, co_id: Optional[str]) -> Optional[str]:
         RETURN co.id AS id, co.title AS title, rec.determination AS determination, rec.confidence_overall AS confidence
         ORDER BY id
         """)
-    # RFIs this CO references
     if ("rfi" in p) and (("this co" in p) or ("current co" in p) or co_id):
         cid = co_id or ""
         return f"""
@@ -260,7 +257,7 @@ def english_to_cypher(nl: str, co_id: Optional[str]) -> str:
         return "MATCH (co:ChangeOrder) RETURN co.id AS id, co.title AS title, co.status AS status ORDER BY id LIMIT 25;"
     import openai  # type: ignore
     openai.api_key = OPENAI_API_KEY
-    system = """Translate English to READ-ONLY Cypher for Neo4j 5. Never use MERGE/CREATE/DELETE/SET/REMOVE/DETACH/LOAD/ APOC.
+    system = """Translate English to READ-ONLY Cypher for Neo4j 5. Never use MERGE/CREATE/DELETE/SET/REMOVE/DETACH/LOAD/APOC.
 Return tidy columns with stable names."""
     resp = openai.ChatCompletion.create(
         model="gpt-4o-mini",
@@ -284,7 +281,7 @@ def summarize_q1(rows):
             safe_md("Details", "Check CO id or evidence wiring."),
         ])
     r = rows[0]
-    return "\n".join([
+    return "\n\n".join([
         safe_md("Heading", "Entitlement (Q1)"),
         safe_md("Change Order", f"{r.get('changeOrder','')} — {r.get('title','')}"),
         safe_md("Status", r.get("status","")),
@@ -309,7 +306,7 @@ def summarize_q2(rows):
         if r.get("matchedSystems"): parts.append("SYS:" + ",".join(r["matchedSystems"]))
         if r.get("matchedArtifacts"): parts.append("ART:" + ",".join(r["matchedArtifacts"]))
         items.append("• " + " ".join(parts))
-    return "\n".join([
+    return "\n\n".join([
         safe_md("Heading", "Precedent (Q2)"),
         safe_md("Count", str(len(rows))),
         safe_md("Details", "\n" + "\n".join(items)),
@@ -322,7 +319,7 @@ def summarize_q3(rows):
             safe_md("Result", "No systems/work areas/schedules linked."),
         ])
     r = rows[0]
-    return "\n".join([
+    return "\n\n".join([
         safe_md("Heading", "Impact Summary (Q3)"),
         safe_md("Change Order", f"{r.get('changeOrder','')} — {r.get('title','')}"),
         safe_md("Status", r.get("status","")),
@@ -352,7 +349,7 @@ def summarize_q4(rows):
     lines.append("**Contract Allowances:** " + ("\n" + "\n".join("• " + fmt_allow(a) for a in ca) if ca else "—"))
     lines.append("**Contingency:** " + ("\n" + "\n".join("• " + fmt_contg(c) for c in cg) if cg else "—"))
     lines.append("**Unit Prices:** " + ("\n" + "\n".join("• " + fmt_upi(u) for u in up) if up else "—"))
-    return "\n".join(lines)
+    return "\n\n".join(lines)
 
 def summarize_q5(rows):
     if not rows:
@@ -380,12 +377,11 @@ def summarize_q5(rows):
         ev = a.get("evidence") or []
         lines.append(f"**Evidence Items:** {len(ev)}")
         return "\n".join(lines)
-    # Back-compat flat
     det = r.get("determination","—")
     conf = r.get("confidence","—")
     at   = r.get("analyzedAt","—")
     evc  = r.get("evidenceCount",0)
-    return "\n".join([
+    return "\n\n".join([
         "**Heading:** Latest AI Analysis (Q5)",
         f"**Change Order:** {r.get('changeOrder','')} — {r.get('title','')}",
         f"**Determination:** {det}",
@@ -470,167 +466,196 @@ def q_doc_list(category=None, dtype=None, search=None, limit=100):
     return run_query(cypher)
 
 # ─────────────────────────────────────────────────────────────
-# UI
+# UI — Two tabs
 # ─────────────────────────────────────────────────────────────
 st.title("DocLabs — Knowledge Graph Q&A")
 st.caption("Ask in English, run Cypher on Neo4j, and get evidence-based explanations for Kevin.")
 
-QUERY_CHOICES = {
-    "Entitlement (Q1)": Q1,
-    "Precedent (Q2)": Q2,
-    "Impact Summary (Q3)": Q3,
-    "Cost Coverage (Q4)": Q4,
-    "Latest AI Analysis (Q5)": Q5,
-    "Generic (Q6)": "GENERIC",
-}
+tab_query, tab_docs, tab_kbr, tab_nodes = st.tabs(["🔎 Query KB", "📚 Documents", "📊 KBR", "🧠 Nodes & Relations"])
 
-with st.form("query_form"):
-    qtype = st.selectbox("Query Type", list(QUERY_CHOICES.keys()), index=0)
-    co_id = st.text_input("CO id", value="CO-042")
-    kevin_q = st.text_input("Kevin’s question (for Q6)", value="")
-    submitted = st.form_submit_button("Run")
+with tab_query:
+    QUERY_CHOICES = {
+        "Entitlement (Q1)": Q1,
+        "Precedent (Q2)": Q2,
+        "Impact Summary (Q3)": Q3,
+        "Cost Coverage (Q4)": Q4,
+        "Latest AI Analysis (Q5)": Q5,
+        "Generic (Q6)": "GENERIC",
+    }
 
-if submitted:
-    try:
-        if qtype == "Entitlement (Q1)":
-            cypher = Q1
-            rows = run_query(cypher, {"co_id": co_id})
-            st.markdown("## 🗣️ Plain-English Summary")
-            show_summary([summarize_q1(rows)])
-            st.markdown("## 🧪 Cypher used")
-            st.code(cypher, language="cypher")
-            with st.expander("Raw results"):
-                st.write(rows or [])
+    with st.form("query_form"):
+        qtype = st.selectbox("Query Type", list(QUERY_CHOICES.keys()), index=0)
+        co_id = st.text_input("CO id", value="CO-042")
+        kevin_q = st.text_input("Kevin’s question (for Q6)", value="")
+        submitted = st.form_submit_button("Run")
 
-        elif qtype == "Precedent (Q2)":
-            cypher = Q2
-            rows = run_query(cypher, {"co_id": co_id})
-            st.markdown("## 🗣️ Plain-English Summary")
-            show_summary([summarize_q2(rows)])
-            st.markdown("## 🧪 Cypher used")
-            st.code(cypher, language="cypher")
-            with st.expander("Raw results"):
-                st.write(rows or [])
-
-        elif qtype == "Impact Summary (Q3)":
-            cypher = Q3
-            rows = run_query(cypher, {"co_id": co_id})
-            st.markdown("## 🗣️ Plain-English Summary")
-            show_summary([summarize_q3(rows)])
-            st.markdown("## 🧪 Cypher used")
-            st.code(cypher, language="cypher")
-            with st.expander("Raw results"):
-                st.write(rows or [])
-
-        elif qtype == "Cost Coverage (Q4)":
-            cypher = Q4
-            rows = run_query(cypher, {"co_id": co_id})
-            st.markdown("## 🗣️ Plain-English Summary")
-            st.markdown(summarize_q4(rows))
-            st.markdown("## 🧪 Cypher used")
-            st.code(cypher, language="cypher")
-            with st.expander("Raw results"):
-                st.write(rows or [])
-
-        elif qtype == "Latest AI Analysis (Q5)":
-            cypher = Q5
-            rows = run_query(cypher, {"co_id": co_id})
-            st.markdown("## 🗣️ Plain-English Summary")
-            st.markdown(summarize_q5(rows))
-            st.markdown("## 🧪 Cypher used")
-            st.code(cypher, language="cypher")
-            with st.expander("Raw results"):
-                st.write(rows or [])
-
-        else:  # Generic (Q6)
-            cypher = english_to_cypher(kevin_q or "", co_id)
-            rows = run_query(cypher)
-            st.markdown("## 🗣️ Plain-English Summary")
-            st.markdown(summarize_q6(kevin_q or "", rows))
-            st.markdown("## 🧪 Cypher used")
-            st.code(cypher, language="cypher")
-            with st.expander("Raw results"):
-                st.write(rows or [])
-
-    except Exception as e:
-        st.error(f"Query failed: {e}")
-
-st.markdown("---")
-
-# ─────────────────────────────────────────────────────────────
-# 📚 Document Library
-# ─────────────────────────────────────────────────────────────
-st.markdown("## 📚 Document Library")
-
-cols = st.columns(2)
-with cols[0]:
-    try:
-        cats = q_docs_by_category()
-        st.metric("Categories", len(cats) if cats else 0)
-    except Exception as e:
-        cats = []
-        st.caption(f"Counts by category unavailable: {e}")
-
-with cols[1]:
-    try:
-        types = q_docs_by_type()
-        uniq_types = len({(r["Category"], r["Type"]) for r in types}) if types else 0
-        st.metric("Doc Types", uniq_types)
-    except Exception as e:
-        types = []
-        st.caption(f"Counts by type unavailable: {e}")
-
-with st.expander("Counts by Category & Type", expanded=False):
-    if cats:
-        st.markdown("**By Category**")
-        st.dataframe(pd.DataFrame(cats))
-    if types:
-        st.markdown("**By Type**")
-        st.dataframe(pd.DataFrame(types))
-
-st.markdown("### Browse")
-lcol, rcol = st.columns([2, 3])
-
-with lcol:
-    cat_options = ["(any)"] + (sorted({r["Category"] for r in types}) if types else [])
-    category = st.selectbox("Category", cat_options, index=0)
-    if category != "(any)":
-        type_options = ["(any)"] + [r["Type"] for r in types if r["Category"] == category]
-    else:
-        type_options = ["(any)"] + (sorted({r["Type"] for r in types}) if types else [])
-    dtype = st.selectbox("Doc Type", type_options, index=0)
-    search = st.text_input("Search (id/title contains)", value="")
-    limit = st.number_input("Limit", min_value=10, max_value=500, value=100, step=10)
-    browse = st.button("🔎 List documents")
-
-with rcol:
-    if browse:
-        cat_arg = None if category == "(any)" else category
-        type_arg = None if dtype == "(any)" else dtype
+    if submitted:
         try:
-            rows = q_doc_list(category=cat_arg, dtype=type_arg, search=search.strip() or None, limit=int(limit))
-            if rows:
-                st.dataframe(pd.DataFrame(rows), use_container_width=True)
-            else:
-                st.info("No documents matched your filters.")
-        except Exception as e:
-            st.error(f"Browse failed: {e}")
+            if qtype == "Entitlement (Q1)":
+                cypher = Q1
+                rows = run_query(cypher, {"co_id": co_id})
+                st.markdown("## 🗣️ Plain-English Summary")
+                show_summary([summarize_q1(rows)])
+                st.markdown("## 🧪 Cypher used")
+                st.code(cypher, language="cypher")
+                with st.expander("Raw results"):
+                    st.write(rows or [])
 
-with st.expander("Orphans (debug)"):
-    try:
-        orphans = run_query("""
-        MATCH (c:DocCategory)
-        WHERE NOT EXISTS { MATCH (:DocType)-[:IN_CATEGORY]->(c) }
-          AND NOT EXISTS { MATCH (:Document)-[:IN_CATEGORY]->(c) }
-        RETURN 'Orphan Category' AS kind, c.name AS name
-        UNION ALL
-        MATCH (t:DocType)
-        WHERE NOT EXISTS { MATCH (t)-[:IN_CATEGORY]->(:DocCategory) }
-        RETURN 'Orphan DocType' AS kind, t.name AS name
-        """)
-        if orphans:
-            st.dataframe(pd.DataFrame(orphans))
+            elif qtype == "Precedent (Q2)":
+                cypher = Q2
+                rows = run_query(cypher, {"co_id": co_id})
+                st.markdown("## 🗣️ Plain-English Summary")
+                show_summary([summarize_q2(rows)])
+                st.markdown("## 🧪 Cypher used")
+                st.code(cypher, language="cypher")
+                with st.expander("Raw results"):
+                    st.write(rows or [])
+
+            elif qtype == "Impact Summary (Q3)":
+                cypher = Q3
+                rows = run_query(cypher, {"co_id": co_id})
+                st.markdown("## 🗣️ Plain-English Summary")
+                show_summary([summarize_q3(rows)])
+                st.markdown("## 🧪 Cypher used")
+                st.code(cypher, language="cypher")
+                with st.expander("Raw results"):
+                    st.write(rows or [])
+
+            elif qtype == "Cost Coverage (Q4)":
+                cypher = Q4
+                rows = run_query(cypher, {"co_id": co_id})
+                st.markdown("## 🗣️ Plain-English Summary")
+                st.markdown(summarize_q4(rows))
+                st.markdown("## 🧪 Cypher used")
+                st.code(cypher, language="cypher")
+                with st.expander("Raw results"):
+                    st.write(rows or [])
+
+            elif qtype == "Latest AI Analysis (Q5)":
+                cypher = Q5
+                rows = run_query(cypher, {"co_id": co_id})
+                st.markdown("## 🗣️ Plain-English Summary")
+                st.markdown(summarize_q5(rows))
+                st.markdown("## 🧪 Cypher used")
+                st.code(cypher, language="cypher")
+                with st.expander("Raw results"):
+                    st.write(rows or [])
+
+            else:  # Generic (Q6)
+                cypher = english_to_cypher(kevin_q or "", co_id)
+                rows = run_query(cypher)
+                st.markdown("## 🗣️ Plain-English Summary")
+                st.markdown(summarize_q6(kevin_q or "", rows))
+                st.markdown("## 🧪 Cypher used")
+                st.code(cypher, language="cypher")
+                with st.expander("Raw results"):
+                    st.write(rows or [])
+
+        except Exception as e:
+            st.error(f"Query failed: {e}")
+
+with tab_docs:
+    st.subheader("Document Library")
+    cols = st.columns(2)
+    with cols[0]:
+        try:
+            cats = q_docs_by_category()
+            st.metric("Categories", len(cats) if cats else 0)
+        except Exception as e:
+            cats = []
+            st.caption(f"Counts by category unavailable: {e}")
+
+    with cols[1]:
+        try:
+            types = q_docs_by_type()
+            uniq_types = len({(r["Category"], r["Type"]) for r in types}) if types else 0
+            st.metric("Doc Types", uniq_types)
+        except Exception as e:
+            types = []
+            st.caption(f"Counts by type unavailable: {e}")
+
+    with st.expander("Counts by Category & Type", expanded=False):
+        if cats:
+            st.markdown("**By Category**")
+            st.dataframe(pd.DataFrame(cats))
+        if types:
+            st.markdown("**By Type**")
+            st.dataframe(pd.DataFrame(types))
+
+    st.markdown("### Browse")
+    lcol, rcol = st.columns([2, 3])
+
+    with lcol:
+        cat_options = ["(any)"] + (sorted({r["Category"] for r in types}) if types else [])
+        category = st.selectbox("Category", cat_options, index=0)
+        if category != "(any)":
+            type_options = ["(any)"] + [r["Type"] for r in types if r["Category"] == category]
         else:
-            st.caption("No orphan categories or doctypes 🎉")
-    except Exception as e:
-        st.caption(f"Orphan check unavailable: {e}")
+            type_options = ["(any)"] + (sorted({r["Type"] for r in types}) if types else [])
+        dtype = st.selectbox("Doc Type", type_options, index=0)
+        search = st.text_input("Search (id/title contains)", value="")
+        limit = st.number_input("Limit", min_value=10, max_value=500, value=100, step=10)
+        browse = st.button("🔎 List documents")
+
+    with rcol:
+        if browse:
+            cat_arg = None if category == "(any)" else category
+            type_arg = None if dtype == "(any)" else dtype
+            try:
+                rows = q_doc_list(category=cat_arg, dtype=type_arg, search=search.strip() or None, limit=int(limit))
+                if rows:
+                    st.dataframe(pd.DataFrame(rows), use_container_width=True)
+                else:
+                    st.info("No documents matched your filters.")
+            except Exception as e:
+                st.error(f"Browse failed: {e}")
+
+    with st.expander("Orphans (debug)"):
+        try:
+            orphans = run_query("""
+            MATCH (c:DocCategory)
+            WHERE NOT EXISTS { MATCH (:DocType)-[:IN_CATEGORY]->(c) }
+              AND NOT EXISTS { MATCH (:Document)-[:IN_CATEGORY]->(c) }
+            RETURN 'Orphan Category' AS kind, c.name AS name
+            UNION ALL
+            MATCH (t:DocType)
+            WHERE NOT EXISTS { MATCH (t)-[:IN_CATEGORY]->(:DocCategory) }
+            RETURN 'Orphan DocType' AS kind, t.name AS name
+            """)
+            if orphans:
+                st.dataframe(pd.DataFrame(orphans))
+            else:
+                st.caption("No orphan categories or doctypes 🎉")
+        except Exception as e:
+            st.caption(f"Orphan check unavailable: {e}")
+
+with tab_kbr:
+    st.subheader("Knowledge Base Reference (KBR)")
+    
+    # Check if kbr.png exists
+    img_path = os.path.join(os.path.dirname(__file__), "kbr.png")
+    
+    if os.path.exists(img_path):
+        try:
+            img = Image.open(img_path)
+            st.image(img, use_container_width=True, caption="Knowledge Base Reference Diagram")
+        except Exception as e:
+            st.error(f"Could not load image: {e}")
+    else:
+        st.warning(f"Image not found at {img_path}")
+
+with tab_nodes:
+    st.subheader("🧠 Knowledge Graph Nodes & Relations")
+    
+    # Check if nodes.md exists
+    md_path = os.path.join(os.path.dirname(__file__), "nodes.md")
+    
+    if os.path.exists(md_path):
+        try:
+            with open(md_path, "r", encoding="utf-8") as f:
+                md_content = f.read()
+            st.markdown(md_content)
+        except Exception as e:
+            st.error(f"Could not load markdown file: {e}")
+    else:
+        st.warning(f"Markdown file not found at {md_path}")
