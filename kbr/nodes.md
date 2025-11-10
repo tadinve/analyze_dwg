@@ -158,8 +158,54 @@ They link Change Orders to execution and delay impact assessments.
 
 ---
 
-## 🌐 Summary
-The DocLabs Knowledge Graph brings together **documents, contracts, systems, and AI reasoning** into a unified structure.  
-By capturing relationships between technical, commercial, and analytical entities, it enables explainable entitlement decisions, faster CO reviews, and high-fidelity project intelligence.
+# Knowledge Graph Summary
+
+## Central node types
+- ChangeOrder — central domain entity (unique `id`). Indexes on `status`, `reason`.
+- Document — documents (unique `id`) with relationship to DocType / DocCategory and HAS_CHUNK -> Chunk.
+- Chunk — document/fragment nodes (unique `id`) with `embedding` index (used for semantic search).
+- Evidence — evidence bundles (unique `id`) linked to Chunks via EVIDENCE_FROM.
+- AnalysisRun / Recommendation / Metric — AI analysis results and recommendations linked to ChangeOrder via HAS_ANALYSIS → AnalysisRun and RECOMMENDS → Recommendation.
+- Spec, RFI, Submittal, DesignBasis, Contract, Project, Vendor, Person, System, WorkArea, Schedule, CostItem, WBS, Allowance, Contingency, UnitPriceItem, Scenario, etc.
+
+## Important constraints & indexes
+- Most domain nodes enforce uniqueness on `id` (e.g. `ChangeOrder.id`, `Document.id`, `Chunk.id`, etc.).
+- Chunk has an `embedding` index for vector/semantic lookup.
+- WBS (`code`), Spec (`section`), Vendor (`name`), DocType/DocCategory (`name`) have uniqueness/indexes as appropriate.
+
+## Common relationship patterns
+- ChangeOrder → REFERS_TO → Spec / RFI / Submittal / Document (artifacts)
+- Document → HAS_CHUNK → Chunk
+- Evidence → EVIDENCE_FROM → Chunk
+- ChangeOrder → HAS_EVIDENCE → Evidence
+- ChangeOrder → HAS_COST_ITEM → CostItem → CODED_AS → WBS
+- ChangeOrder → MODIFIES → System
+- ChangeOrder → HAS_ANALYSIS → AnalysisRun → HAS_METRIC / USES_EVIDENCE → Evidence → EVIDENCE_FROM → Chunk
+- AnalysisRun → RECOMMENDS → Recommendation
+- DocType → IN_CATEGORY → DocCategory ; Document → IS_A → DocType
+
+## How to answer typical questions (example Cypher)
+- Fetch entitlement evidence for a CO:
+  MATCH (co:ChangeOrder {id:$co_id})-[:HAS_EVIDENCE]->(ev:Evidence)-[:EVIDENCE_FROM]->(ch:Chunk)
+  RETURN co.id AS changeOrder, collect(ch.id) AS chunkIds
+
+- Find precedent COs sharing artifacts / WBS / systems:
+  (match target CO artifacts/WBS/systems, then find other COs with overlaps and return matched items)
+
+- Latest analysis + recommendation for a CO:
+  MATCH (co:ChangeOrder {id:$co_id})-[:HAS_ANALYSIS]->(ar:AnalysisRun)
+  WITH co, ar ORDER BY ar.timestamp DESC LIMIT 1
+  OPTIONAL MATCH (ar)-[:RECOMMENDS]->(rec:Recommendation)
+  RETURN co.id, ar.id, ar.determination, rec.action
+
+- List documents in a category / doc type (used by UI):
+  MATCH (d:Document)-[:IS_A]->(t:DocType)-[:IN_CATEGORY]->(c:DocCategory {name:$category})
+  RETURN d.id AS id, coalesce(d.title,'') AS title LIMIT 100
+
+## Notes & recommendations
+- The model is well-normalized with ChangeOrder as the hub for entitlement/precedent analysis.
+- Keep the Chunk embedding index and ensure the vector/semantic pipeline updates embeddings when chunks change.
+- Ensure the CA/TLS certs are trusted when connecting to cloud Neo4j instances (avoid disabling verification in production).
+- Add small helper indexes if queries show hotspots (e.g., Document.title text index for search).
 
 ---

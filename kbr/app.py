@@ -3,6 +3,7 @@ import json
 import textwrap
 from typing import Dict, Any, List, Optional
 import os
+import re
 
 import streamlit as st
 import pandas as pd
@@ -249,25 +250,79 @@ def robust_q6_fallback(nl: str, co_id: Optional[str]) -> Optional[str]:
         """
     return None
 
+# Add sanitizer for model output (remove ``` fences and leading "cypher" labels)
+def _sanitize_cypher_text(text: str) -> str:
+    if not text:
+        return text
+    s = text.strip()
+
+    # Extract content inside the first fenced block if present
+    fence_match = re.search(r"```(?:[\w+-]*)\n(.*?)\n```", s, flags=re.S | re.I)
+    if fence_match:
+        s = fence_match.group(1).strip()
+    else:
+        # strip stray starting/ending fences and backticks
+        s = re.sub(r"^```[^\n]*\n", "", s)
+        s = re.sub(r"\n```$", "", s).strip()
+
+    # remove a leading "cypher" label line if present (e.g. "cypher", "Cypher:")
+    lines = s.splitlines()
+    if lines and lines[0].strip().lower().startswith("cypher"):
+        lines = lines[1:]
+    # also handle a leading "Cypher:" style token
+    if lines and re.match(r"^cypher[:\s]*$", lines[0].strip(), flags=re.I):
+        lines = lines[1:]
+
+    cleaned = "\n".join(lines).strip()
+    cleaned = cleaned.strip("` \n")
+    return cleaned
+
+# Replace english_to_cypher with sanitized model handling + new client fallback
 def english_to_cypher(nl: str, co_id: Optional[str]) -> str:
     fallback = robust_q6_fallback(nl, co_id)
     if fallback:
         return fallback
     if not OPENAI_API_KEY:
         return "MATCH (co:ChangeOrder) RETURN co.id AS id, co.title AS title, co.status AS status ORDER BY id LIMIT 25;"
-    import openai  # type: ignore
-    openai.api_key = OPENAI_API_KEY
+
     system = """Translate English to READ-ONLY Cypher for Neo4j 5. Never use MERGE/CREATE/DELETE/SET/REMOVE/DETACH/LOAD/APOC.
 Return tidy columns with stable names."""
-    resp = openai.ChatCompletion.create(
-        model="gpt-4o-mini",
-        messages=[{"role":"system","content":system},
-                  {"role":"user","content":f"English: {nl}\nCO hint: {co_id or ''}"}],
-        temperature=0.1,
-    )
-    q = resp["choices"][0]["message"]["content"].strip()
+    user_msg = {"role": "user", "content": f"English: {nl}\nCO hint: {co_id or ''}"}
+    messages = [{"role": "system", "content": system}, user_msg]
+
+    default_safe = "MATCH (co:ChangeOrder) RETURN co.id AS id, co.title AS title, co.status AS status ORDER BY id LIMIT 25;"
+
+    # Try new OpenAI client (openai>=1.0.0)
+    q = None
+    try:
+        from openai import OpenAI  # type: ignore
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=messages,
+            temperature=0.1,
+        )
+        # new SDK path
+        q = getattr(resp.choices[0].message, "content", "").strip() or resp.choices[0].message.content.strip()
+    except Exception:
+        # Fallback to older openai package interface if available
+        try:
+            import openai  # type: ignore
+            openai.api_key = OPENAI_API_KEY
+            resp = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=messages,
+                temperature=0.1,
+            )
+            q = resp["choices"][0]["message"]["content"].strip()
+        except Exception:
+            return default_safe
+
+    # sanitize model output to remove fences and language markers
+    q = _sanitize_cypher_text(q or "")
+
     if is_write_query(" " + q + " "):
-        return "MATCH (co:ChangeOrder) RETURN co.id AS id, co.title AS title, co.status AS status ORDER BY id LIMIT 25;"
+        return default_safe
     return q
 
 # ─────────────────────────────────────────────────────────────
