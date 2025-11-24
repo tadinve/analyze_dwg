@@ -2,3 +2,6 @@ streamlit
 neo4j
 openai>=1.0.0
 dotenv
+pdf2image
+pymupdf
+pdf2markdown4llm

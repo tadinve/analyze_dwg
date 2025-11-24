@@ -1,0 +1,2450 @@
+# GeneWare Change Request Knowledge Base (Cleaned)
+
+
+
+---
+
+---
+
+# Document: OAC Resp PCO 80016.00001 GBI Rev Offsite Permit Set REJ 2020.03.04.pdf
+[Meta]
+OAC Services
+Subject: FINAL PRICING R&S PCO 80016.00001 R&S GBI Off-site Improvement Permit Set Dated 01/18/2019
+We are pleased to present you with R&S PCO 80016.00001 in the amount of $598,760.00. This work is for R&S GBI Off-site Improvement Permit Set Dated 01/18/2019.
+This revised PCO covers GBI's cost and scope of work increases for the Civil Offsite Plans dated 1/18/2019.
+Scope of work included in this PCO are;
+Costs for items 1 thru 3 were previously approved in PCO 80016 for the same scope of work and the approved amounts have been removed.
+Rudolph & Sletten, Inc.
+[Scope_of_Work]
+The scope of work is as follows:
+[Other]
+## Page 1
+Certainly! Here is the extracted text from the provided document:
+November 27, 2019
+Attention: Chris Jacobs
+2200 1st Avenue South. Suite 200
+Seattle, Washington 98134
+Reference: Microsoft SVC
+R&S Job No. 02001.106713
+Dear Chris,
+1. Demo HC Ramps on West side Macon & La Avenida.
+2. Grade and place AB for HC Ramps on West side of Macon & La Avenida.
+3. Plug 3/4" HMA at lip of gutter after new HC Ramps are poured.
+4. Grind 2" AC on La Avenida and Macon. Repaving of Macon Ave was not previously on the drawings.
+5. Place 2" overlay with 1/2" HMA on La Avenida and Macon.
+6. Survey/Modeling time.
+If you have any questions, or if I can be of any further assistance, please feel free to contact me.
+Very truly yours,
+Let me know if you need anything else!
+## Page 2
+## Page 3
+## Page 4
+## Page 5
+## Page 6
+## Page 7
+## Page 8
+## Page 9
+## Page 10
+## Page 11
+## Page 12
+## Page 13
+## Page 14
+## Page 15
+## Page 16
+## Page 17
+## Page 18
+## Page 19
+## Page 20
+## Page 21
+## Page 22
+## Page 23
+---
+
+---
+
+# Document: 2020 0901 PCO 81537 email confirmation.pdf
+[Meta]
+From: Kevin Bosch
+To: Martin Sisemore; 'Darren Lombardi'; 'Chris Heger (OAC SERVICES INC)'
+Subject: RE: MSV - GBI Review
+Unused Allowance Items for PCO 80943, 80941, 80198 totaling $713,763.00
+PCO 80838 to be funded at $207,124.00 from GC Contingency.
+PCO 80915, for the balance of $49,496.00, will be funded through a cross-charge to M&H.
+All changes, listed above, will be combined and submitted as a single PCO for clarity.
+Kevin Bosch | Sr. Project Manager
+RUDOLPH AND SLETTEN, INC.
+From: Kevin Bosch
+To: Kevin Bosch; Martin Sisemore; Darren Lombardi; Chris Heger (OAC SERVICES INC)
+Subject: MSV - GBI Review
+Senior Project Manager
+[Cost_Detail]
+In follow-up to our 08.31.20 review of GBI s total cost to complete, R&S has successfully reached an agreement with GBI
+for the sum of $2,000,000.00.
+The agreed $2,000,000.00 value is to include the following:
+$200,000.00 to be funded from GC Contingency, per Martin Sisemore.
+[Other]
+## Page 1
+Kevin Bosch
+Sent: Tuesday, September 1, 2020 4:59 PM
+Cc: Kelli Quinn; Kevin Moore
+Attachments: Copy of 2020 0901 GBI Off Haul OffSite Study kub.xlsm
+Hello Darren.
+PCO: 80016.00001R0001, 80576.00001, 80785, 80878, 80915, 81018, 81175, 81218, 81223, 80198.00007,
+81338, 81447, 80198.00009, 80198.00008, 80198.0010.
+Please see the attached spreadsheet, GBI Exposure CRH R1, dated 09.01.20, reflecting our understanding.
+415.269.5144 mobile
+Original Appointment
+Sent: Monday, August 31, 2020 9:47 AM
+When: Monday, August 31, 2020 11:00 AM-11:45 AM (UTC-08:00) Pacific Time (US & Canada).
+Where: https://tutorperini.zoom.us/j/99706749066?pwd=VVVHQURFOHc0ZmsrcUljWGF5NmJjUT09
+Hello, Team.
+This meeting is in follow up of last week s GBI review.
+Join from PC, Mac, Linux, iOS or Android:
+https://tutorperini.zoom.us/j/99706749066?pwd=VVVHQURFOHc0ZmsrcUljWGF5NmJjUT09
+Password: 10671300
+Or iPhone one-tap :
+US: +12532158782,,99706749066# or +13462487799,,99706749066#
+Or Telephone:
+Dial(for higher quality, dial a number based on your current location):
+## Page 2
+US: +1 253 215 8782 or +1 346 248 7799 or +1 669 900 6833 or +1 301 715 8592 or +1 312 626 6799 or +1 646
+558 8656
+Meeting ID: 997 0674 9066
+International numbers available: https://tutorperini.zoom.us/u/adCMnPnMOY
+Kevin Bosch
+415.269.5144
+Kevin.Bosch@rsconst.com
+2 Circle Star Way, 4th Floor
+San Carlos, CA 94070
+www.rsconstruction.com
+---
+
+---
+
+# Document: OAC REJECTED PCO 09041.00001 Self-Performed Mock-Up Additions 2020.03.10.pdf
+[Meta]
+OAC Services
+Subject: ROM Pricing for PCO #09041.00001
+Reference: Microsoft SVC Project R&S Job # 02001.106713
+This letter is to inform you of the following potential change on the project. We have assigned PCO # 09041.00001 to track the changes for the Self-perform Mock-up Additions. The current estimated impact on the project is $47,364.00 and a possible delay of 0 days to the project schedule.
+Owner authorizes Rudolph & Sletten and their subcontractors to proceed with the changes noted within the attached PCO per the following (see attached pricing as applicable):
+RUDOLPH & SLETTEN, INC.
+Sr. Project Manager
+[Decision]
+Approved, proceed with work, submit final pricing
+Approved, proceed with work on Time & Materials
+Approved as priced, proceed with work
+Not approved, do not proceed with work, submit final pricing for approval
+Not approved, do not price
+[Other]
+## Page 1
+Microsoft SVC
+1065 La Avenida St
+Mountain View, CA 94043-1421
+1/7/2020
+2200, 1st Avenue South, Suite #200
+Seattle, WA 98134
+Dear Ms. Jacobs,
+Accepted by:
+Owner/Owner s Representative Date
+If you have any questions, please do not hesitate to call.
+Respectfully,
+Kevin Bosch
+## Page 2
+## Page 3
+## Page 4
+## Page 5
+## Page 6
+## Page 7
+## Page 8
+## Page 9
+## Page 10
+## Page 11
+## Page 12
+## Page 13
+## Page 14
+## Page 15
+---
+
+---
+
+# Document: OAC APPROVAL PCO 80576 GBI North Sidewalk OOS Work 2019.07.19.pdf
+[Meta]
+OAC Services
+Subject: R&S PCO 80576 - GBI - North Sidewalk Out-of-Sequence Work
+PCO Category: Field Condition
+We are pleased to present you with R&S PCO 80576 in the amount of $47,834.00. This work is for GBI - North
+The entire north side of the project was originally planned to be demoed in one high production activity. At
+This PCO covers GBI original production credit which was to cut adjacent areas to provide fill to grade the
+Rudolph & Sletten, Inc.
+Senior Project Manager
+cc PCO 80576 file
+Project: Microsoft SVC
+R&S Project No. 02001.106713
+PCO Category: Field Condition
+PCO 80576
+The change in the work is as follows: This PCO covers the cost of grading a flat area 5 feet from the end of the
+Item Description Contractor Amount
+This work needs to be started this week in the field in order to maintain Project Schedule.
+Owner Contractor
+Microsoft Corporation Rudolph & Sletten, Inc.
+PROJECT: MICROSOFT GTGC JOB NO.: 37045
+OWNER: RS GTGC JOB ACTIVITY:
+Water Truck 3 Axle $110.00 SUBCONTRACTORS QTY. UM RATE AMOUNT
+SUMMARY Total Subcontractors: $0.00
+PROJECT: MICROSOFT GTGC JOB NO.: 37045
+OWNER: RS GTGC JOB ACTIVITY:
+Water Truck 3 Axle $110.00 SUBCONTRACTORS QTY. UM RATE AMOUNT
+SUMMARY Total Subcontractors: $0.00
+[Scope_of_Work]
+The scope of work is as follows:
+this point, the scope is chopped out to different activities and per field walk on 06/24/2019, grading a flat area
+[Cost_Detail]
+Detailed Costs
+00001 GOODFELLOW change order for out-of-sequence North GOOTOP $46,441.00
+Level 1 Fee (@ 2.25%) RUDSLE $1,045.00
+Level 2 Pending Incentive Fee (Schedule @ .25%) RUDSLE $116.00
+Level 3 Pending Incentive Fee (Budget @ .25%) RUDSLE $116.00
+Level 4 Pending Incentive Fee (Discretionary @ .25%) RUDSLE $116.00
+Total amount for this change: $47,834.00
+GTGC -- REGULAR -- -- OVERTIME -- SPECIAL EQUIPMENT QTY. UM RATE AMOUNT
+LABOR HR. RATE HR. RATE AMOUNT GPS System HR $28.00
+Foreman 24.0 $136.00 $176.00 $3,264.00 Trash Pump HR $12.50
+Gradesetter/Blade 24.0 $128.00 $165.00 $3,072.00 Generator (Small) HR $12.50
+General Operator 72.0 $118.00 $153.00 $8,496.00 Compressor HR $12.50
+Mechanic $150.00 $184.00 Wacker (Plate or Upright) 24.0 HR $25.00 $600.00
+Apprentice $71.00 $86.00 Mobile Broom (4Hr Min.) 24.0 HR $185.00 $4,440.00
+Labor Foreman $96.00 $123.00
+General Laborer 120.0 $86.00 $108.00 $10,320.00 Total Special Equipment: $5,040.00
+Teamster $103.00 $131.00
+RENTAL EQUIPMENT UM RATE AMOUNT
+Total GTGC Labor: $25,152.00
+EQUIPMENT # UNITS HR. RATE AMOUNT
+Pickup - 1/2-3/4 Ton 1.0 24.0 $20.00 $480.00
+Flatbed - 1-5 Ton $35.00
+Mule $15.00
+Cat 14H $167.00 Total Rental Equipment: $0.00
+Cat 140H $167.00
+MATERIALS (incl. tax) UM RATE AMOUNT
+Cat 815 Compactor $138.00
+Cat 825 Compactor $157.00
+Cat 613 $165.00
+623-Water Pull $224.00
+Cat 623 $224.00
+Cat 627 $225.00
+Cat 637 $356.00
+36"-44" Vib Roller $34.00
+66"-84" Vib Roller 1.0 24.0 $68.00 $1,632.00
+Skip Loader 1.0 24.0 $48.00 $1,152.00
+Skid Steer $42.00 Total Materials: $0.00
+Loader 950 $103.00
+TRUCKING UM RATE AMOUNT
+Cat D4 $81.00 Equipment Move-ins Each $500.00
+Cat D6 $126.00 Five Axle Dump Truck HR $132.00
+Cat D6 MUD $156.00 10 Wheeler HR $115.00
+Cat D8 $201.00 Super Dump (4) 72.0 HR $144.00 $10,368.00
+Transport (5 Axle) HR $138.00
+Backhoe $68.00 Off Hwy Truck HR $195.00
+Mini Excavator $81.00
+Cat Excavator 330 1.0 24.0 $134.00 $3,216.00
+Cat Excavator 345 $194.00 Total Trucking: $10,368.00
+Water Truck 2 Axle $100.00
+$0.00
+Total GTGC Equipment: $6,480.00
+Total Cost $ 4 8,595.20
+(From First Column - Markup Included) SUB-TOTAL: $36,672.00
+(From Second Column) SUB-SUBTOTAL: $10,368.00
+MARK-UP (% and $): 15.00% $1,555.20
+Unit Cost $ 4 8,595.20 SUB-TOTAL: $11,923.20
+NOTES GRAND TOTALS:
+* TOTAL COST WITH MARK-UP: $48,595.20
+* BOND FEE (% and $): 0.00% $0.00
+* DAILY TOTAL: $48,595.20
+GTGC -- REGULAR -- -- OVERTIME -- SPECIAL EQUIPMENT QTY. UM RATE AMOUNT
+LABOR HR. RATE HR. RATE AMOUNT GPS System -1.9 HR $28.00 -$52.64
+Foreman -1.9 $136.00 $176.00 -$255.68 Trash Pump HR $12.50
+Gradesetter/Blade -1.9 $128.00 $165.00 -$240.64 Generator (Small) HR $12.50
+General Operator -1.9 $118.00 $153.00 -$221.84 Compressor HR $12.50
+Mechanic $150.00 $184.00 Wacker (Plate or Upright) HR $25.00
+Apprentice $71.00 $86.00 Mobile Broom (4Hr Min.) HR $185.00
+Labor Foreman $96.00 $123.00
+General Laborer -1.9 $86.00 $108.00 -$161.68 Total Special Equipment: -$52.64
+Teamster $103.00 $131.00
+RENTAL EQUIPMENT UM RATE AMOUNT
+Total GTGC Labor: -$879.84
+EQUIPMENT # UNITS HR. RATE AMOUNT
+Pickup - 1/2-3/4 Ton 1.0 -1.9 $20.00 -$37.60
+Flatbed - 1-5 Ton $35.00
+Mule $15.00
+Cat 14H 1.0 -1.9 $167.00 -$313.96 Total Rental Equipment: $0.00
+Cat 140H $167.00
+MATERIALS (incl. tax) UM RATE AMOUNT
+Cat 815 Compactor 1.0 -1.9 $138.00 -$259.44
+Cat 825 Compactor $157.00
+Cat 613 $165.00
+623-Water Pull $224.00
+Cat 623 $224.00
+Cat 627 4.0 -1.9 $225.00 -$423.00
+Cat 637 $356.00
+36"-44" Vib Roller $34.00
+66"-84" Vib Roller $68.00
+Skip Loader $48.00
+Skid Steer $42.00 Total Materials: $0.00
+Loader 950 $103.00
+TRUCKING UM RATE AMOUNT
+Cat D4 $81.00 Equipment Move-ins Each $500.00
+Cat D6 $126.00 Five Axle Dump Truck HR $132.00
+Cat D6 MUD $156.00 10 Wheeler HR $115.00
+Cat D8 $201.00 Super Dump (4) HR $144.00
+Transport (5 Axle) HR $138.00
+Backhoe $68.00 Off Hwy Truck HR $195.00
+Mini Excavator $81.00
+Cat Excavator 330 $134.00
+Cat Excavator 345 $194.00 Total Trucking: $0.00
+Water Truck 2 Axle 1.0 -1.9 $100.00 -$188.00
+Sandis LS $0.00
+Total GTGC Equipment: -$1,222.00
+Total Cost $ ( 2,154.48)
+(From First Column - Markup Included) SUB-TOTAL: -$2,154.48
+(From Second Column) SUB-SUBTOTAL: $0.00
+MARK-UP (% and $): 0.00% $0.00
+Unit Cost $ ( 4.31) SUB-TOTAL: $0.00
+NOTES GRAND TOTALS:
+* TOTAL COST WITH MARK-UP: -$2,154.48
+* BOND FEE (% and $): 0.00% $0.00
+* DAILY TOTAL: -$2,154.48
+[Schedule_Impact]
+This change will require 0 days be added to the contract schedule.
+[Other]
+## Page 1
+June 26, 2019
+Attention: Mrs. Chris Jacobs
+2200 1st Avenue South, Suite 200
+Seattle, Washington 98134
+Reference: Microsoft SVC
+R&S Job No. 02001.106713
+Dear Chris:
+Sidewalk Out-of-Sequence Work.
+5 feet from the end of the building and sloping away 10' from the hinge point is required.
+entire north side with a scraper. The new out-of-sequence work requires loading from the south stockpile and
+trucking material for soil placement and because of access, the work will be performed with an excavator, pad
+drum, skip loader, and added trucking to haul.
+If you have any questions, or if I can be of any further assistance, please feel free to contact me.
+Yours sincerely,
+Chris Moreton
+Chris Moreton
+## Page 2
+June 26, 2019
+1065 La Avenida St
+Mountain View, CA 94043-1421
+building and sloping away 10' from the hinge point is required. The new out-of-sequence work requires
+loading from the south stockpile and trucking material for soil placement and because of access, the work will
+be performed with an excavator, pad drum, skip loader, and added trucking to haul.
+sidewalk demo for 148 CY
+_Chris Moreton
+Date: Date:___6/26/19
+## Page 3
+TODAY'S DATE: #REF!
+DESCRIPTION: OUT OF SEQUENCE AREA 4 WORK
+QTY: 1.0 LS
+GTGC
+TOP GRADE LABOR & EQUIPMENT:
+Quantity 1.0
+TOOLS, RENTAL, MAT'LS, TRUCKING & SUBS:
+## Page 4
+TODAY'S DATE: #REF!
+DESCRIPTION: OUT OF SEQUENCE AREA 4 WORK CREDU|IT
+QTY: 500.0 CYD
+GTGC
+TOP GRADE LABOR & EQUIPMENT:
+Quantity 500.0
+TOOLS, RENTAL, MAT'LS, TRUCKING & SUBS:
+## Page 5
+---
+
+---
+
+# Document: OAC Response PCO 80012 GMP REI Shift Work SVC-5 Demo 01-29.18 to 02.19.2018 VOID 2019.10.15.pdf
+[Meta]
+OAC Services
+Subject: R&S PCO 80012 - GMP - REI Shift Work SVC-5 Demo - 1/29/18-2/9/18
+PCO Type:
+PCO Category:
+We are pleased to present you with R&S PCO 80012 in the amount of $0.00. This work is for GMP - REI Shift Work SVC-5 Demo - 1/29/18-2/9/18.
+This PCO covers the cost of Rosendin double time OT work for SVC-5 Demo during 1/29/18 - 2/9/18. As part of the demolition work in Building SVC-5, Ferma was working on a second shift (for which there is an allowance in their contract); Rosendin needed to provide (2) workers on a second shift to safe-off any electrical items that needed to be demolished. The shifts were (4) 10 hour nights Monday through Thursday for (2) weeks. This PCO covers the amount carried in the GMP in the amount of $6,880 and the remaining cost will be carried under PCO 80012.00001 which is above the GMP value.
+Rudolph & Sletten, Inc.
+Project Manager
+cc PCO 80012 file
+OAC: 15-Oct-2019
+This is OAC written confirmation that PCO 80012 is closed / VOID, for all scope, cost and schedule compensation is resolved via OAC Approval Letter response for PCO 80012.00001 (REI Shift Work SVC-5 Demo - 1/29/18-2/9/18) issued on 15-Oct-2019. Available GMP funds are used via PCO 80012.00001
+Digitally signed by Chris Jacobs (OAC)
+DN: CN=Chris Jacobs (OAC)
+Email: vmokhtari@rudolphandsletten.com
+[Scope_of_Work]
+The scope of work is as follows:
+[Other]
+## Page 1
+Here's the extracted text:
+September 11, 2019
+Attention: Mrs. Chris Jacobs
+2200 1st Avenue South, Suite 200
+Seattle, Washington 98134
+Reference: Microsoft SVC
+R&S Job No. 02001.106713
+Dear Chris:
+If you have any questions, or if I can be of any further assistance, please feel free to contact me.
+Yours truly,
+Vahid Mokhtari
+Vahid Mokhtari
+Date: 2019.10.15 14:51:31 -07'00'
+Digitally signed by Vahid Mokhtari
+DN: CN=Vahid Mokhtari
+Date: 2019.09.11 05:44:06 -07'00'
+## Page 2
+## Page 3
+## Page 4
+## Page 5
+## Page 6
+## Page 7
+## Page 8
+## Page 9
+---
+
+---
+
+# Document: OAC Approval PCO 81028 PCI OT for Friday 1.17.2020 and Saturday 1.18.2020 2020.01.16.pdf
+[Meta]
+OAC Services
+Subject: R&S PCO 81028 - PCI - OT for 1/17/2020 and 1/18/2020 - Carpenter Holidays
+PCO Type: Owner Directed Change
+PCO Category: Change Condition
+We are pleased to present you with R&S PCO 81028 in the amount of $30,510.00. This work is for PCI - OT for
+Rudolph & Sletten, Inc.
+Senior Project Manager
+Project: Microsoft SVC
+R&S Project No. 02001.106713 PCO Type: Owner Directed Change
+PCO Category: Change Condition
+Final Pricing for PCO 81028
+Item Description Contractor Amount
+Owner Contractor
+OAC Rep. for Microsoft Corporation Rudolph & Sletten
+[Scope_of_Work]
+The scope of work is as follows:
+[Cost_Detail]
+Cost associated to work PCI OT on 1/17/2020 and 1/18/2020. This OT will help to progress the work as follow:
+The change in the work is as follows: Cost associated to work PCI OT on 1/17/2020 and 1/18/2020. This OT will
+Detailed Costs
+00001 Performance Contracting BP 3M - PCI - OT for 1/17/2020 and PERCON $29,620.00
+Level 1 Fee (@ 2.25%) RUDSLE $667.00
+Level 4 Pending Incentive Fee (Discretionary @ .25%) RUDSLE $74.00
+Level 2 Pending Incentive Fee (Schedule @ .25%) RUDSLE $75.00
+Level 3 Pending Incentive Fee (Budget @ .25%) RUDSLE $74.00
+Total amount for this change $30,510.00
+Totals for Friday 1/17/2020 $ 1 2,686.72
+Totals for Saturday 1/18/2020 $ 1 6,932.88
+Totals $ 29,619.60
+Total 42
+Description Hours $/Hour Total cost Date
+Foreman OT 16 $ 43.92 $ 702.72 1/17/2020
+Journeyman OT 320 $ 37.45 $ 11,984.00 1/17/2020
+Subtotal $ 12,686.72 1/17/2020
+NO OT COST $ -
+Totals for Saturday 1/17/2020 $ 1 2,686.72 1/17/2020
+Total 42
+Description Hours $/Hour Total cost Date
+Foreman OT 16 $ 43.92 $ 702.72 1/18/2020
+Journeyman OT 320 $ 37.45 $ 1 1,984.00 1/18/2020
+Subtotal $ 12,686.72 1/18/2020
+Total 14
+Description Hours $/Hour Total cost Date
+Foreman OT 8 $ 43.92 $ 3 51.36 1/18/2020
+Journeyman OT 104 $ 37.45 $ 3 ,894.80 1/18/2020
+Subtotal $ 4 ,246.16 1/18/2020
+Totals for Saturday 1/18/2020 $ 1 6,932.88 1/18/2020
+[Schedule_Impact]
+This change will require 0 days be added to the contract schedule
+[Other]
+## Page 1
+January 16, 2020
+Attention: Ms. Chris Jacobs
+2200 1st Avenue South, Suite 200
+Seattle, Washington 98134
+Reference: Microsoft SVC
+R&S Job No. 02001.106713
+Dear Chris ,
+1/17/2020 and 1/18/2020 - Carpenter Holidays.
+Work for Friday 1/17/2020
+Carpenters = 42
+1. Complete framing at Fitness Center Restroom and locker rooms.
+2. Rework at EZ Jambs, B4 Close up, Elevator Shafts at Area 1 Level 1
+3. Rework at EZ Jambs, B4 Framing, Janitor rooms frame/ hang at Area 1 Level 2
+4. Hang Feature wall and ceilings, Base reveal, Skylight framing at Area 2 Level 2
+5. C3 Soffit/ Wall hang at Area 3 Level 1
+6. C1 Soffit/ Wall hang, C4 Tile backer board/ wall hang at Area 3 Level 2
+7. Layout for stone wall coordination and clip install, area 3 exterior
+8. Elevator Shafts at roof.
+Work for Saturday 1/18/2020
+Carpenters = 42
+1. Complete framing at Fitness Center Restroom and locker rooms.
+2. Rework at EZ Jambs, B4 Close up, Elevator Shafts at Area 1 Level 1
+3. Rework at EZ Jambs, B4 Framing, Janitor rooms frame/ hang at Area 1 Level 2
+4. Hang Feature wall and ceilings, Base reveal, Skylight framing at Area 2 Level 2
+5. C3 Soffit/ Wall hang at Area 3 Level 1
+6. C1 Soffit/ Wall hang, C4 Tile backer board/ wall hang at Area 3 Level 2
+7. Layout for stone wall coordination and clip install, area 3 exterior
+8. Elevator Shafts at roof.
+Tapers = 14
+1. Outside perimeter 1st coat work at Area 1 Level 2
+2. Outside perimeter 1st coat work at Area 2 Level 1
+## Page 2
+3. C3/C4 first coat at Area 3 Level 1
+This OT will help on progressing tile at restrooms, paint and finishes to continue. By working PCI tapers Friday and
+Saturday it will help with the time required for the next pass to be applied.
+If you have any questions, or if I can be of any further assistance, please feel free to contact me.
+Very truly yours,
+Edwin Magana
+cc PCO81028 file
+Scott Gillespie
+## Page 3
+January 16, 2020
+1065 La Avenida St
+Mountain View, CA 94043-1421
+help to progress the work as follow:
+Work for Friday 1/17/2020
+Carpenters = 42
+1. Complete framing at Fitness Center Restroom and locker rooms.
+2. Rework at EZ Jambs, B4 Close up, Elevator Shafts at Area 1 Level 1
+3. Rework at EZ Jambs, B4 Framing, Janitor rooms frame/ hang at Area 1 Level 2
+4. Hang Feature wall and ceilings, Base reveal, Skylight framing at Area 2 Level 2
+5. C3 Soffit/ Wall hang at Area 3 Level 1
+6. C1 Soffit/ Wall hang, C4 Tile backer board/ wall hang at Area 3 Level 2
+7. Layout for stone wall coordination and clip install, area 3 exterior
+8. Elevator Shafts at roof.
+Work for Saturday 1/18/2020
+Carpenters = 42
+1. Complete framing at Fitness Center Restroom and locker rooms.
+2. Rework at EZ Jambs, B4 Close up, Elevator Shafts at Area 1 Level 1
+3. Rework at EZ Jambs, B4 Framing, Janitor rooms frame/ hang at Area 1 Level 2
+4. Hang Feature wall and ceilings, Base reveal, Skylight framing at Area 2 Level 2
+5. C3 Soffit/ Wall hang at Area 3 Level 1
+6. C1 Soffit/ Wall hang, C4 Tile backer board/ wall hang at Area 3 Level 2
+7. Layout for stone wall coordination and clip install, area 3 exterior
+8. Elevator Shafts at roof.
+Tapers = 14
+1. Outside perimeter 1st coat work at Area 1 Level 2
+2. Outside perimeter 1st coat work at Area 2 Level 1
+3. C3/C4 first coat at Area 3 Level 1
+This OT will help on releasing Tile, paint and finishes to continue. By working PCI tapers Friday and Saturday it will
+give the Sunday and Monday (holiday) the time required for the next pass.
+## Page 4
+1/18/2020 - Carpenter Holidays
+We have / have not proceeded with this change based on the direction of Darren Lombardi and subcontract
+change orders will be sent based on that direction.
+Chris Jacobs Edwin Magana
+Date: Date:
+## Page 5
+MSSVC - 01/17/2019 and 1/18/2020 - Friday and Saturday OT - Drywall/Framing Activities
+## Page 6
+MSSVC - 01/17/2019 - Friday OT - Drywall/Framing Activities Date
+AREA/LEVEL COUNT DESCRIPTION
+All Areas 1 Required Safety Person 1/17/2020
+All Areas 2 Stocker/Cleanup 1/17/2020
+Garage/Fitness 2 Framing Ceilings in RRs/Framing Soffits in Mezzanine 1/17/2020
+Area 1 Level 1 6 Rework at EZ Jambs, B4 Close up, Elevator Shafts 1/17/2020
+Area 1 Level 2 6 Rework at EZ Jambs, B4 Framing, Janitor rooms frame/ hang 1/17/2020
+Area 2 Level 2 9 Hang Feature wall and ceilings, Base reveal, Skylight framing 1/17/2020
+Area 3 Level 1 2 C3 Soffit/ Wall hang 1/17/2020
+Area 3 Level 2 4 C1 Soffit/ Wall hang, C4 Tile backer board/ wall hang 1/17/2020
+Area 3 EXT. 4 Layout for stone wall coordination and clip install. 1/17/2020
+Roof 6 Elevator Shafts 1/17/2020
+01/17/19 - FRIDAY TAPERS Full taping crew - No Union Holiday 1/17/2020
+## Page 7
+MSSVC - 01/18/2019 - Saturday OT - Drywall/Framing Activities Date
+AREA/LEVEL COUNT DESCRIPTION
+All Areas 1 Required Safety Person 1/18/2020
+All Areas 2 Stocker/Cleanup 1/18/2020
+Garage/Fitness 2 Framing Ceilings in RRs/Framing Soffits in Mezzanine 1/18/2020
+Area 1 Level 1 6 Rework at EZ Jambs, B4 Close up, Elevator Shafts 1/18/2020
+Area 1 Level 2 6 Rework at EZ Jambs, B4 Framing, Janitor rooms frame/ hang 1/18/2020
+Area 2 Level 2 9 Hang Feature wall and ceilings, Base reveal, Skylight framing 1/18/2020
+Area 3 Level 1 2 C3 Soffit/ Wall hang 1/18/2020
+Area 3 Level 2 4 C1 Soffit/ Wall hang, C4 Tile backer board/ wall hang 1/18/2020
+Area 3 EXT. 4 Layout for stone wall coordination and clip install. 1/18/2020
+Roof 6 Elevator Shafts 1/18/2020
+MSSVC - 01/18/2019 - Saturday OT - Taping Activities Date
+AREA/LEVEL COUNT DESCRIPTION
+Area 1 Level 2 6 Outside perimeter 1st coat work 1/18/2020
+Area 2 Level 1 3 Outside perimeter 1st coat work 1/18/2020
+Area 3 Level 1 5 C3/C4 first coat 1/18/2020
+## Page 8
+Level 1
+## Page 9
+TEAM ROOM 511.15
+ZONE
+511C1
+A-L-34
+ZONE
+614F1
+ZONE
+614E1
+ZONE 611G1
+A-L-37 3 FOCUS ROOM 614G2 TEAM ROOM FOCUS ROOM
+614.43 614D2
+ZONE 614G1 ZONE
+614D1
+IW 10
+614D
+IW 10
+614G
+COURTYARD
+EGRESS
+614C3
+IW 10 IW 12
+614H 614C
+ZONE ZONE
+611H1 614H1
+ZONE 614C1
+FOCUS ROOM
+614A2
+IW 10 IW 10 614A 614B
+ZONE TEAM ROOM ZONE 614B1 614.20 412C1
+CONFERENCE (S) FOCUS ROOM 614.11 614B2 ZONE 614A1
+ZONE
+613A1 ZONE 613B1
+YLPPUS/YPOC 01.416
+FOCUS ROOM
+511C2 EXIT STAIR
+1 / A-D-31.D1
+JANITOR
+614.27
+UNISEX UNISEX
+614.33 614.30
+MAIL/COPY
+614.35
+PHONE
+614.41 FOCUS ROOM ELECT CL
+614F2 614.26
+MENS WOMENS
+RESTROOM RESTROOM
+614.32 614.31 PHONE 614.42
+EXTERIOR
+COURTYARD
+X614
+TEAM ROOM
+614.45
+COFFEE 610.10
+FOCUS ROOM 614C2
+PHONE PHONE 614.16 614.17
+IW HALL 1 / A-D-31.D1 613.01
+1 / A-D-31.D3 1 / A-D-31.D4 1 / A-D-31.D4
+ELEVATOR EMR 613 613.10 MOTHER'S ROOM TEAM ROOM
+613.11 613.15
+1E.13-D-A
+614.25
+02.114
+511.20
+614F1
+614F2
+614E1
+A-G-19
+8-' 0"
+6-' 0"
+2G416
+614.42
+G2G116 1G116 614.43
+613B1
+51.316
+614B1
+614B2
+2C416
+511C1
+C115
+2C115
+51.115
+61.416 71.416
+611.40 614.41
+614A2A
+H2A416
+0H3Z 0H3Z 0G1X
+00GG33ZZ
+0A6V 0G3V
+A-G-27
+0G1X
+0A6V
+0H3Z
+0H3Z 0A3Z
+00HH33ZZ 0H3Z 0H3Z 00GG33ZZ 0H3Z 0A3Z
+0H3Z 0A3Z IW 10 CO E U G R R T E Y S A S RD IW 10 0A6V 614F 614F3 614E 0A3Z
+0H3Z 0A3Z 0A3Z
+0H3Z 00HH33ZZ 0G1X
+0A3Z 0A3Z
+0A6V
+0H3V
+0A6V
+IW HALL
+614.01
+0A6V
+0H3Z 0H3Z 0H3Z
+0A3Z 0A3Z
+0A6V
+0H3Z
+00HH33ZZ 0H3Z 0H3Z 0H3Z
+0H3Z 0A3V
+MALL 0H3Z 610.01
+0G3X 0G1X
+0H3Z 0H3Z 0H3Z
+9 0A3Z 0A3Z B A-G-27
+0A3Z 0A3Z
+0A6V
+0A3Z 0A6V
+0H3Z
+1D416
+00GG33ZZ 0G1X 0A3Z 0H3Z
+1C416
+A-L-30
+1 A-G-26 A-L-46
+02.416
+A-L-39 17
+OCCUPANT STORAGE
+614.25
+B 2 A-L-46
+SIM.
+6 A-L-34
+A-L-46 1SIM.
+A-J-52
+A-G-28
+614.10
+SIM. A-L-46 SIM.
+A-L-37 3
+11.416
+11.316
+1 / A-D-31.E3
+611.45 614.45
+0H3Z
+D2D416
+7 A-G-25 1
+A-G-24
+SIM OPP
+1 A-L-70
+A-G-25
+8 A-G-25 SIM
+614D2E 0G3Z
+0A3Z
+A-L-70
+12 0A3Z 0A3Z A-G-25
+A-G-25
+14 A-G-25
+A-G-25 TYP
+A-L-70 1 SIM
+5 A-G-25 SIM.
+TYP TYP TYP
+A-L-70 1
+1H116
+1G416
+613A1
+1H416
+11 11
+EZ Jambs
+Rework to get 15
+A-J-52
+tile work going
+0A3V
+11 11 0A3V 11
+11 11 15
+11 11
+11 11 8 SIM 8
+11 0A6V
+11 Area 1 11 11
+A-J-52
+TYP Level 1 15
+0A3V
+0L8Z IIWW HHAALLLL
+661144..0011
+D2 8
+0A3V
+15 E
+11 11 8
+11 11
+8 0A3V
+11 11 11 11 K
+A-L-72 1 A-G-24
+CCOONNFF (( EE SS RR )) EENNCCEE 6 CCOOPPYY//SSUUPPPPLLYY 661144..1111 661144..1100
+11 24 K 6 A-G-24 614A1 11 11
+0A6Z11
+IIWW HHAALLLL 11 661133..0011
+11 EMR 0A3V 613.10 11
+11 613B2
+## Page 10
+N P Q R S T T.9 U
+CONFERENCE
+(S) FOCUS ROOM PHONE PHONE
+614.11 614B2 614.16 614.17
+ZONE
+614A1
+IW HALL 1 / A-D-31.D1 1 / A-D-31.D2 613.01 1 / A-D-31.D2
+1 / A-D-31.D3
+ZONE
+ELEVATOR EMR 613A1 ZONE 613 613.10 MOTHER'S 613B1 ROOM TEAM ROOM
+613.11 613.15 25
+ELECT RM 613.46 FOCUS ROOM 613B2
+IW 10 IW 14
+613A 613B
+TEAM ROOM FOCUS ROOM
+613.45 613A2 FOCUS ROOM ZONE
+613C2 613C1
+ZONE ZONE
+612H1 613H1
+IW 10 IW 12
+613H 613C
+EXTERIOR COURTYARD IW HALL COURTYARD EGRESS 6 A-L-34
+612.01 X613 613C3
+IW 10 IW 10 SOUTH ENTRY
+613G 613D 610.00
+ZONE ZONE ZONE 613G1 613D1
+612G1 28
+WOMENS
+RESTROOM
+TEA 6 M 13 R .4 O 3 OM FOC 6 U 1 S 3 D R 2 OOM EL 6 E 1 C 3 T .3 R 2 M 613.25
+FOCUS ROOM IW 10
+613G2 613E UNISEX 613.27
+PHONE CIRCULATION
+612.42 613.42 610.02
+CABLE -CORP
+613.31
+PHONE 29
+613.41 FOCUS ROOM MENS 613F2 CABLE -DEV RESTROOM 613.30 613.28 ZONE
+613E1
+ZONE 613F1 29.5
+CIRCULATION
+610.03 A-L-35
+53.316
+6-' 0"
+612.41
+7-' 5
+2G316
+1D316
+613B1
+613F2
+613F1
+51.316
+2C316 1C316
+614B2 61.416 71.416
+613A2A
+613E1
+H2A316
+0H3Z
+0H3Z 0H3Z 4
+A-G-27 A-L-46 SIM. A-L-46 SIM. 0A3Z 0A3Z B
+0A3Z 0A3Z B
+6 0A6V
+0A3Z 0A6V A-L-37 3
+0H3Z
+0H3Z
+0A6V
+0A3Z 0H3Z 0H3Z 0A3V
+613.45
+0H3Z 0H3Z
+0A6V 0A3Z
+0A3Z
+0H3Z 0H3Z 0H3Z 0A6V 0G3V
+0A6V
+2 A-L-46
+SIM.
+A-L-46 1SIM.
+0A6V
+A-J-52
+0A6V
+0A3Z 00GG33ZZ
+0H3Z
+0H3Z 0H3Z 0H3Z
+0A3Z 0H3Z COURTYARD
+IW 10 EGRESS
+0H3Z 613F 613F3 0G3Z
+0A3Z
+0H3Z 0G3Z
+0A3Z 0H3Z 0H3Z
+0A3Z
+0H3Z
+13 B
+B 0L8Z 00AA33VV B 0A6V 0A6V 0A6V 0L8Z A-L-39
+0A6V
+A-L-35
+11.416
+11.316
+0H3Z A-L-70 1
+12 A-G-25 9 SIM A-G-25 TYP
+612.45
+A-L-70
+A-G-25
+A-G-25
+0A3Z 0A3Z
+14'-0"
+8 A-G-25
+612.43 613.43
+A-G-25 TYP
+1 A-L-70
+5 A-G-25 SIM SIM
+D2D316
+613D2E
+1H216
+1G216
+1H316
+1G316
+Elevator shaft
+11 24
+framing. Held due K 6
+614A1 A-G-24
+to RFI # 2861 11 11 0A6Z11
+IIWW HHAALLLL 11 661133..0011
+11 EMR 0A3V 613.10 613A1 8 11
+11 613B2
+11 0A3V K A-L-71 33 11 11
+11 11
+11 11
+11 11
+11 11 11 8
+Area S1IM
+IIWW 1100
+661133HH
+Level 1
+0A3V
+0L8Z
+0A3V 8
+IIWW 1100
+661133GG 15
+11 EZ Jambs
+Rework to get
+11 11 8 8
+tile work going 11 11
+423.3211 0H3Z 11 11
+OCCUPANT 11
+STORAGE 613.35 423.31 0A3Z 11 11
+0A3V 0A3V 15
+11 8 0L8Z
+CCIIRRCCUULLAATTIIOONN
+11 661100..0033 3
+1 A-J-52
+A-J-52
+## Page 11
+## Page 12
+H H.6 J K L M N P
+ZONE ZONE ZONE 521A1 521B1 521D1
+TEAM ROOM
+521.15
+FOC 5 U 2 S 1 C R 2 OOM 19
+CONDUIT
+521.13
+PHONE ZONE 621.40 621G1 ZONE 621F1 20
+IW 8
+621G
+IW 14 621F
+OCCUPANT
+STORAGE
+621.30
+ZONE
+621D1
+IW 10 621D
+IW 12
+621C
+ZONE
+621C1
+FOCUS ROOM
+621B2
+IW 10 IW 7 HUB LOUNGE 621B 621A 621.45 CONFERENCE KITCHENETTE (M) 621.46 624.45
+ZONE ZONE
+621B1 621A1
+ZONE ZONE PHONE PHONE 622B1 622A1 622.17 622.16 TEAM ROOM
+622.15
+YLPPUS/YPOC
+41.125
+ZONE 521C1
+EXIT
+PASSAGEWAY
+222.01
+FOCUS ROOM
+521A2
+CIRCULATION
+520.01
+PHONE 621.41
+PHONE 621.42
+ELECT CL
+621.33 FOCUS ROOM
+621D2
+DECK
+X621
+CIRCULATION
+620.04
+MECHANICAL
+621.20 HALL 624.01 OCCUPANT STORAGE
+621.15
+BEVERAGE STORAGE
+624.46
+1 / A-D-32.D2
+1 / A-D-32.D3 1 / A-D-32.D4
+JANITOR ELEVATOR 623.47 613
+3B.23-D-A
+1 / A-D-32.D2
+FOCUS ROOM 621G2
+51.126
+621.30
+7'-5 1/4"
+FOCUS ROOM
+621A2
+FOCUS ROOM 622A2
+1C126
+1 A-G-20
+621B1
+IW HALL 621.01
+1F126
+1G126 2G126
+521A1 521B1 521C1 521D1
+521A2A 521A2B 521C2C 521C2D
+624.44
+C2B126
+621B2B
+8-' 0"
+6-' 0"
+622B1
+1D126
+0G3Z 0H3Z 0A3Z 0A3Z
+0H3Z 0H3Z
+0H3Z 0H3Z 0H3Z
+0A3Z 0A3Z
+A-G-27
+0H3Z
+0H3Z 0H3Z 0H3Z 0H3Z 0G1X 0H3Z 0G3Z 0A3Z 0A3Z
+0H3Z
+0H3Z
+0G3Z
+0G3Z 621D2F
+0A3Z
+0A3Z
+0L8Z 00GG33ZZ
+0A3Z
+0A6V
+0A6V
+0A6V
+0A6V 0A3Z
+0H3V
+0A3Z
+0A3Z 0A3Z 0A3Z
+0A3Z
+0A3Z B
+0A3Z
+B 0A3Z
+0G1Z 0A3Z
+0G1X 0L8Z
+0A3Z
+51.226
+621.40 621.41
+621.42
+0G1X 0H3Z
+13.126 0A3Z 0A3Z
+0H3Z 0H3Z OCCUPANT STORAGE 621.31 0H3Z
+0A3Z
+0H3Z
+D2D126
+51.125
+A-L-30
+A-L-30 A-L-34 2
+A-L-35 3
+3 A-G-28
+41.125
+A-L-39
+A-L-46 A-L-46
+SIM. SIM.
+64.426
+0A3Z 0A3Z 0A3Z 0A3Z
+000GGG333ZZZ 624.45
+0H3Z
+621A1 8'-6" 0A3Z 0A3Z 0A3Z
+0A6Z
+621.01
+0H3Z
+2A126
+SIM 7 A-G-25 A-L-70 1 SIM SIM
+19 19A-M-38
+SIM SIM E OPP TYP OPP 37 A-L-71 37 37 A-L-71 37
+SIM E SIM
+25 25
+A-J-52 A-J-52
+A-G-25 SIM
+7 A-L-46
+A-G-25 SIM
+A-J-52
+1 A-G-25
+A-J-52
+A-G-25
+14 A-G-25 TYP
+0A3Z
+0H3Z
+0A3Z
+9 A-G-25
+622A1
+2A226
+11 11 11
+EDIT SUITE
+222J2 11 11
+ZONE EDIT SUITE 521D1 222J5 11 11 11
+8 FOCUS ROOM 8 521A2
+11 11 11 11
+CONTROL RECORDING ROOM
+222J4 222J3 11 11
+11 11
+0L8Z 8 11 6 Z 2 O 1 N G E 1 11 11 11 11 11 11 11 11
+PPHHOONNEE
+11 662211..4422
+D' E' E.7' F'
+IW 14 IIWW 88 11 621F 662211GG 8
+HHAALLLL 662244..0022
+CIRCULATION 620.04 0A3V
+0L8Z
+8 0A3V
+MECHANICAL
+621.20 I 6 W 2 1 1 B 0 6 IW 21 7 A 11 HALL CON 6 F 2 ( E M 4 R .4 ) E 5 NCE CIRCULATION HUB LOUNGE 624.01 722.03 621.45 KITCHENETTE O S C T C O U R P A A G N E T 621.46
+621.15
+11 24
+EXIT ACCESS S 6 T 1 A 1 IR 11 11
+11 11 HALL
+621.01 11 0A3Z K
+11 0H3Z 11 0A3Z 11 0H3Z 11 11
+0A3Z
+11 0H3Z
+K24.111 L24.111
+Outside
+Perimeter.
+Taping 1st
+finish coat.
+Area 1
+15 Level 2
+Outside
+Perimeter. Taping 1st
+finish coat.
+## Page 13
+N P Q R S T U
+ZONE ZONE 521C1 521D1
+TEAM ROOM 521.16 E IN X T IT E S R T IO A R IR 41
+FOC 5 U 2 S 1 C R 2 OOM 19
+CIRCULATION
+520.01
+UNISEX UNISEX PHONE ZONE 624.33 624.30 JANITOR 621.40 FOCUS ROOM 624F1 624.27
+624F2 ZONE TEAM ROOM 624E1
+624.35
+PHONE 621.41
+20 MENS WOMENS
+RESTROOM RESTROOM
+PHONE 624.32 624.31 621.42
+CONF ( E M R ) ENCE A-L-37 3 624.44 IW 8 IIWW 1100 624F 662244EE FOCUS ROOM 624D2 ELECT RM 624.25 HALL 624.02
+ZONE
+624D1
+IW 10
+624D
+EXTERIOR
+CONFERENCE
+X624
+IW 14
+624C
+ZONE
+624C1
+IW 7 IW 10 HALL 624A 624B 624.01 CON 6 F 2 ( E M 4 R .4 ) E 5 NCE 6 Z 2 O 4 N B E 1 FOC 6 U 2 S 4 C R 2 OOM TEA 6 M 24 R .2 O 0 OM CONFERENCE (L)
+624.10
+FOCUS ROOM
+BEVERAGE ZONE 624B2 STORAGE 624A1
+624.46
+IW HALL 623.01 1 / A-D-32.D3 1 / A-D-32.D4
+ZONE JANITOR ELEVATOR ZONE 623B1
+623.47 613 623A1 TEAM ROOM 623.15
+3B.23-D-A
+1 / A-D-32.D1
+PHONE PHONE FOCUS ROOM 624.16 624.17 624A2
+1 / A-D-32.D1 1 / A-D-32.D4
+FOCUS ROOM
+623A2
+02.426
+EXIT STAIR
+11 1/8"
+6-' 6
+7/8"
+624E1
+7'-2 1/4"
+624B1
+8-' 0"
+624B2
+6-' 0"
+2C426
+624A1
+2A426
+624F1
+624.44
+2F426
+521C1 521D1
+521C2C 521C2D
+1D426
+0A3Z
+0H3Z 0H3Z
+0H3Z 0H3Z
+0G3Z
+0A3Z
+0G3Z
+0A6V 0A6V
+0A6V 0H3Z 0A6V 0A6V 0A6V 621.40
+0G1X 0H3Z 0G1X
+621.41 0A3Z 0H3Z
+0A3Z
+621.42 A-L-75
+0H3Z 00GG33ZZ
+00GG33ZZ
+0A3Z
+0A6V
+0A6V
+0A6V
+0A3Z 0A6V
+00HH33ZZ 0H3Z 0H3Z 0H3Z 0H3Z 0H3Z 0G3X 0A6V
+0A3Z 0G1X B
+0H3Z
+0H3Z
+0H3Z
+0A3Z 0A3Z 0A3Z 0A3Z 0A6V
+0A3Z
+623B1 00HH33ZZ
+623B2
+13.126 0A3Z 0A3Z
+0H3Z 0H3Z
+OCCUPANT
+STORAGE 621.31
+0H3Z
+0A3Z
+0H3Z
+61.125
+1C426
+A-L-34
+5 A-L-34
+A-G-26 A-G-26
+A-L-46 A-L-46 SIM. SIM. 5
+A-L-37 3
+53.426 B
+E 3A A-L-75 3B
+A-J-52
+64.426
+8'-6"
+01.426
+624.45
+01.326
+0A3Z 0A3Z
+0E4Z
+00EE44ZZ SIM
+0A3Z 0A3Z
+0A6Z 0H3Z 0H3Z 623.01
+0H3Z
+D2D426
+SIM 19 SIM
+TYP OPP
+37 A-L-71 37
+E SIM 25
+A-J-52 A-J-52
+624D2E 14 5 A-G-25 A-G-25 TYP SIM E 0A3Z
+A-G-25
+TYP 1
+A-J-52
+A-J-52
+TYP TYP
+A-L-70 1 8 A-G-24 SIM
+A-G-24 TYP
+A-J-52
+51.326
+11 ZONE 11 MEC 5 H 21 S .2 H 0 AFT EXIT S A TA C I C R ESS 521D1 510
+SIM 11 9 A-M-38 11
+11 11 A-J-52
+A-G-24
+11 0A3V0L8Z 8 11 15
+11 0A3V
+0A3V 11 11
+11 7 A-L-46 11 MENS WOMENS
+RESTROOM RESTROOM
+PPHHOONNEE 11 624.32 624.31
+662211..4422
+8 11 CON 6 F 2 ( E M 4 R .4 ) E 4 NCE 6 IW 24 8 F I 6 W 2 4 1 E 0 HHAALLLL 662244..0022 TYP
+0A3V
+0L8Z
+0A3V 8
+CONFERENCE 11 HALL 62 (M 4.4 ) 5 11 11 K 624.01 1 CONFERENCE 11 A-G-24 62 ( 4 L . ) 10 K 11 11
+11 K
+11 24
+11 11 11
+11 MALL
+620.02 HALL 11 11 11 623.01 K 0A3Z 11
+11 11 0H3Z 623A1 11 11 SIM
+J24.111 I24.111
+Outside
+EZ Jambs Perimeter.
+Taping 1st Rework. Janitor Room
+finish coat. Hanging.
+15 15
+Outside
+Perimeter. Taping 1st
+finish coat.
+Area 1
+Level 2
+0H3Z 0A3Z
+## Page 14
+H H.6 J K L M N P
+BEVERAGE ZONE ZONE STORAGE
+621B1 621A1 624.46
+1 / A-D-32.D1 1 / A-D-32.D2
+1 / A-D-32.D4
+ZONE ZONE JANITOR ELEVATOR PHONE PHONE 622B1 622A1 623.47 613
+622.17 622.16 TEAM ROOM
+622.15
+ELECT RM
+WELLNESS 623.46
+ROOM
+622.21
+FOC 6 U 2 S 2 B R 2 OOM IW 9 IW 7 HUB 6 2 L 2 O . U 45 NGE 6 H 2 A 2. L 0 L 1
+MEDITATION 622B 622A ROOM MAIL/COPY 622.20 623.45
+IW 20
+622C
+DECK
+X622
+E.5" E.7"
+ZONE
+ELECT CL 622C1
+622.25
+TEAM ROOM HALL
+622.44 622.02
+EXIT
+PASSAGEWAY 722.01 DN
+PHONE
+623.42
+TEAM ROOM 622.41
+PHONE
+(E) SERVICE 623.41 29
+ELEVATOR (E) EXIT STAIR 712 712
+PHONE
+OCCUPANT 623.40
+STORAGE
+622.40
+(E) MECH 29.5 SHAFT
+722.34
+CIRCULATION
+722.08
+(E) ELECT RM 722.33
+51.126
+621B1 FOCUS ROOM
+621A2
+IW HALL 621.01
+FOCUS ROOM
+622A2
+622.44
+622.41
+623.42
+623.41
+622.40
+623.40
+1C226
+0A3Z
+0A3Z 8-' 0"
+0A3Z
+B 0A3Z 6-' 0"
+0G1Z 0A3Z
+0G1X 0L8Z
+0A3Z 622B1
+0G3Z
+A-G-27
+0A3Z
+0H3Z
+0A6V
+2 :1
+0A6V
+0A3Z
+0G1X 0G3Z
+0H3Z
+0G1X
+0H3Z
+0H3Z
+0G1X
+0A3Z
+0G1X
+0A3Z
+0A3Z 0A3Z
+RAMP UP 1:12.3
+51.226
+C2B226
+0G1X 0H3Z
+0H3Z
+622B2B 0G1Z
+0H3Z
+0A3Z
+0A3Z
+0H3Z 0H3Z
+0H3Z OCCUPANT STORAGE
+623.35
+53.326
+A-L-46 A-L-46
+SIM. SIM.
+0L8Z 622.20
+A-L-35 3
+0A6V
+0G3V
+0L8Z
+A-L-35
+64.426
+621A1 8'-6" 0A3Z 0A3Z 0A3Z
+0A6Z
+621.01
+0H3Z
+0H3Z
+0H3Z
+623.45
+2A126
+0A3Z
+0H3Z
+0A3Z
+622A1
+A-G-25
+A-J-52
+A-G-25
+SIM A-G-25 SIM
+A-G-25 SIM
+10 A-L-46
+A-G-25
+2A226
+11 24
+EXIT ACCESS S 6 T 1 A 1 IR 11 11
+11 11 HALL
+621.01 11 0A3Z K
+11 0H3Z 11 0A3Z 11 0H3Z 11
+0A3Z
+11 0H3Z
+11 11
+11 8 11
+0L8Z
+0A3V
+RAMP 722
+EXIT ACCESS C" D" E" E.5" E.7" F" STAIR
+X622
+7.3"
+0G3Z K EXIT ACCESS STAIR
+0G3Z X612
+A-G-24
+TEAM ROOM
+TEAM ROOM 722.81 IW 16
+722F3 722H 11 11
+FOCUS RM
+722.82 11
+ZONE RM 722.83
+0L8Z
+CCIIRRCCUULLAATTIIOONN
+772222..0055 RAMP
+CCOONNFFEERREENNCCEE (E) ELECT RM 622
+((MM)) 722.33 772222..7755
+FOCUS RM
+722.85
+PHONE PHONE PHONE
+722.76
+K24.111 L24.111
+Area 1
+Level 2
+Outside
+Perimeter.
+Taping 1st
+finish coat.
+## Page 15
+N P Q R S T U
+FOCUS ROOM
+BEVERAGE ZONE 624B2 STORAGE 624A1
+624.46
+IW HALL 623.01
+ZONE JANITOR ELEVATOR ZONE 623B1
+623.47 613 623A1 TEAM ROOM 623.15
+ELECT RM
+623.46 FOCUS ROOM
+623B2
+CONFERENCE
+HALL (L) IW 7 IW 14
+622.01 623.10 623A 623B
+FOCUS ROOM ZONE
+MAIL/COPY 623C2 623C1
+623.45
+IW 12
+623C
+IW 10
+623D
+ZONE
+623D1
+HALL
+622.02
+IW 9 FOCUS ROOM 623G IW 9 IW 10 623D2 623F 623E
+PHONE
+623.42
+PHONE MECHANICAL
+623.41 623.30 29
+PHONE
+623.40 ZONE 623E1
+ZONE FOCUS ROOM ZONE
+623G1 623F2 623F1 29.5
+CIRCULATION
+620.03
+TCELE
+23.326
+PHONE PHONE FOCUS ROOM 0" 624.16 624.17 624A2 8-'
+1 / A-D-32.D1 1 / A-D-32.D2 0" 1 / A-D-32.D2 6-' 1 / A-D-32.D3
+FOCUS ROOM
+623A2
+7'-2 1/4"
+WOMENS RESTROOM
+623.25
+UNISEX
+623.27
+MENS RESTROOM
+623.28
+1G326
+G2F326 F2F326
+1F326
+1D326
+624A1
+624B2
+623B1
+623B2
+EXTERIOR
+CONFERENCE X623
+623.42
+623.41
+623E1
+623.40
+D2D326
+2C326 1C326
+0H3Z
+0H3Z
+0H3Z
+0A3Z 0A3Z 0A3Z 0A3Z
+0A3Z
+00HH33ZZ
+0A3Z 0H3Z 0H3Z 0A3V
+10 0A3Z 0H3Z 0A6V
+A-G-27
+0A6V
+0A6V
+0A6V
+A-J-52
+0A6V
+0A3Z 00GG33ZZ 0G1X
+0H3Z
+0A3Z
+0H3Z 0A3Z 623D2E
+0H3Z 0H3Z 00GG33ZZ
+0A3Z
+0H3Z OCCUPANT STORAGE
+623.35 0G1X
+0H3V 0H3V
+53.326
+A-L-46 A-L-46 SIM. SIM. 5
+A-L-37 3
+5 A-L-34
+0L8Z 0A6V 1 0A6V B 0A6V 0L8Z A-L-39
+0A6V A-L-35 A-L-35
+64.426
+8'-6"
+01.326
+01.426
+0A3Z 0A3Z
+0A6Z 0H3Z 8 0H3Z 623.01 A-G-24
+0H3Z A-J-52
+10D A-L-75 8B
+8A E
+0H3Z
+623.45
+A-L-70
+A-G-25 3
+TYP A-J-52
+14 A-G-25
+A-G-25 SIM SIM 10 A-L-46
+A-G-25
+0A6V
+0A6V 3
+A-J-52
+2A326
+51.326
+11 24
+11 11 11
+MALL
+620.02
+HALL 11 11 11 623.01 K 0A3Z
+11 11 0H3Z 623A1 11 11 SIM
+CONFERENCE
+623.10
+11 11 11 11
+EXTERIOR CONFERENCE 15 X623
+0A3V
+EXIT ACCESS
+STAIR
+X622 0L8Z
+0A3V 8
+8 11
+IW 9 11 623G
+11 11
+0A3V 0A3V 0A3V
+0L8Z 8 11 11 8 0L8Z
+EXIT CIRCULATION PASSAGEWAY
+620.03 620.04
+J24.111 I24.111
+0H3Z 0A3Z
+Janitor Room
+Framing.
+Area 1
+Level 2
+D4 Outside
+Perimeter.
+Taping 1st
+finish coat.
+EZ Jambs Outside
+Rework.
+Perimeter.
+Taping 1st
+finish coat.
+## Page 16
+Finish Feature
+wall hang as
+outside
+Perimeter 1st
+finish coat
+work.
+978<<4
+Outside
+## Page 17
+Perimeter 1st
+finish coat
+work.
+Area 2
+## Page 18
+Outside
+Perimeter 1st
+finish coat
+work.
+Area 2
+Outside
+Perimeter 1st
+finish coat
+work.
+## Page 19
+Finish Feature
+wall hang.
+Skylight framing.
+Area 2
+Level 2
+## Page 20
+48;3
+Base Reveal
+## Page 21
+Area 2
+=3?F419
+;F696?79
+install.
+## Page 22
+Ceiling Hang.
+Area 2
+Level 2
+install.
+Ceiling Hang.
+Base Reveal
+install.
+## Page 23
+Y AA BB CC DD EE
+ZONE ZONE
+312H1 313H1 ZONE 312C1
+1 / A-D-31.C1 1 / A-D-31.C2
+IW 9 EXTERIOR IW 10 1 / A-D-31.C4
+312C COURTYARD 312H
+X312
+COURTYARD EGRESS
+312C2
+IW HALL 12
+312.01
+IW 10
+312G
+IW 10 312D
+ZONE 312D1 ZONE
+312G1 13
+TEAM ROOM A-L-33 6 CONFERENCE FOC 3 U 1 S 2 D R 2 OOM IW 10 CO E U G R R T E Y S A S RD IW 10 312.43 (M) 312E 312F3 312F 312.26 FOCUS ROOM
+312G2
+ZONE FOCUS ROOM
+313G1 313G2 14 OCCUPANT FOCUS ROOM MAIL/COPY 40
+STORAGE ELECT RM 312F2 312.35 312.30 312.31 PHONE TEAM ROOM 312.41 313.40 ZONE 312E1 ZONE
+312F1 2
+CIRCULATION A-L-52 A-L-33 310.04
+1C 15
+MENS WOMENS
+RESTROOM RESTROOM
+316.21 316.22
+GLOBAL GLOBAL GLOBAL
+G FU LO S B IO A N L FUS 3 I 1 O 6 N A 2 BOH FUS 3 I 1 O 6 N A 3 BOH FUS 3 I 1 O 6 N A 4 BOH
+SERVERY
+316A1
+UNISEX UNISEX
+316.20 316.23
+A-L-52
+16.5
+1 / A-D-31.C4
+1 / A-D-31.E2
+03.213
+1 A-G-11
+1C213
+PHONE GLOBAL 312.42 FUSION SEATING 312.42 316A
+312.41
+4A613
+1G313 2G313
+312E1
+1D213
+316A1A
+53.213 312F2 312F1
+2G213
+0L8Z 0G1X 0A3Z 00GG33ZZ
+0A6V
+0A6V
+0A6V
+0A6V
+0L8Z 0A3Z 00GG33ZZ
+0G3Z 0H3Z 0H3Z 0H3Z
+0A3Z 0A3Z 0H3Z B 0G3Z 0H3Z
+0A3Z 0G3Z 0A3Z 0H3Z 0A3Z
+0H3Z 0H3Z 0H3Z 0H3Z 0A3Z 0H3Z
+0G1X 0H3Z 0H3Z
+0A3Z 0L8Z 0L8Z 0A6V 0A6V 6
+A-G-27
+A-L-52 2A 0A3Z
+GLOBAL
+FUSION
+STORAGE 0A3X 316.24
+2B 0A6Z 0A3X
+A-L-52
+0A3Z
+00GG33ZZ 0A3V B
+B1A613
+1A 312.26
+A-L-76 1B 1C
+313.40
+0A6V 0A3V 0A3V
+0A3V
+1D A-L-52
+A-G-36
+2 A-M-83 A-L-36 1 SIM B A-M-83 SIM
+C1A613
+42.613
+A-L-33 5
+B 2 A-L-46
+SIM.
+A-L-46 1SIM.
+312.43
+6 0EA3Z A-G-37
+B B B
+A-G-37 E
+A-G-37
+14 2
+8 A-G-37 A-G-22 A-G-37 E
+E 8 E
+A-G-37
+6 A-J-52
+D2D213
+0A3Z
+SIM 0A3Z
+A-G-25
+TYP.
+A-G-25 SIM. 8 12 6'-0" 6'-11 3/8" A-G-25 A-G-25 0A3Z 0A3Z 1'-0 5/8"
+SIM SIM
+0A3Z A-L-70
+SIM 1 312D2E
+14 A-G-25 TYP. 9
+A-G-25 SIM A-L-70 1 SIM
+SIMA-G-25
+1H213
+1G213
+1H313
+A-J-52
+A-J-52
+TYP. CENTER SLDING DOORS ON GRID
+A-J-52
+2 3 4'-9" 8" 11'-9 3/4" A-J-52 A-J-52
+A-J-52
+"8/5
+"8/3
+1-'22
+0A3V 8
+0L8Z
+0A3V
+11 11
+0A3Z
+11 8 8 11
+11 11
+11 11 11 11 11 11 11
+11 11 0A3V 0A3V
+15 15 0L8Z 8 15 11 11
+11 11 A-L-46 310.04
+0A3X 0A3W 0A3X 18
+10 1/8"
+"4/1
+5'-8 1/4" 9'-3 3/4" 8'-6" 5'-6 3/4"
+1'-6"
+7'-4 1/8" 7 1/8" 23
+"2/1 8-'6 "8/3 1-'6 "8/5 1-'1
+6'-11" 6'-0" 6'-11" 1'-1"
+1'-1"
+"4/3 11-'6
+ALIGN
+1'-7"
+3'-2 1/2" 6'-3" 10'-11 1/2" 1'-1" 6'-11"
+"2/1
+8-'2
+"7-'1
+"2/1
+2-'3 "8/1
+11-'01
+"8/7 6-'3 "8/3
+11-'7 "8/5
+6-'6
+"6-'6 10'-6 5/8" 7'-3 1/2" 6'-0" 8 1/2"
+"8/7 01-'7
+"8/1 01-'4
+"6-'8 "8/1 7-'1
+"8/5 2-'9
+"4/1 8-'4
+"2/1
+11-'31
+"2/1 0-'8
+"8/5 6-'9
+"8/1
+3-'1
+6'-7 1/4" ALIGN 6'-6 3/4" ALIGN
+"8/1 01-'4
+"6-'41
+4'-8 1/4" 9'-3 1/2" 10'-1 1/8" 4'-9 1/4" 7'-10 7/8" 9"
+11'-0 3/4"
+"3-'7
+14'-9 1/4"
+"4/3 6-'6
+"4/3
+NGILA
+NGILA "8/5
+5"4/1 7-'11
+Area 3 Level 1 - C3
+C3 Soffit
+Hang
+C3 Soffit
+Hang
+C3 First coat
+taping work.
+C3 Wall
+Hang/ Tile
+Backerboard
+## Page 24
+EE FF GG HH JJ KK LL MM NN z50
+1A 11
+ZONE ZONE 312H1 313H1 ZONE 313C1 1D A-L-55 1C
+I 3 W 13 1 H 0 3 IW 13 C 9 1B 315A7A 1 / A-D-31.C1 1 / A-D-31.C2
+1 / A-D-31.C3 C E O X U T X R E 3 T R 1 Y 3 IO AR R D CO E U G R R T E Y S A S RD CRE 3 B 1 E O 5 K A H S 7 IDE C S R E E R E V K E S R ID Y E 40
+313C2 315A2
+IW HALL 12 312.01
+A-L-55 2E 2F A-L-55
+I 3 W 13 1 G 4 I 3 W 13 1 D 0
+ZONE 3 Z 1 O 3 N D E 1 315A7B
+312G1 13
+1A 4A A-L-55 41 1D A-L-53 1B
+FOCUS ROOM 1A
+313D2 CIRCULATION I 3 W 1 3 1 F 2 CO E U G 3 R 1 R 3 T E F Y S 3 A S RD I 3 W 1 3 1 E 0 1D A-L-54 1B 2A 310.03 CIRC 31 U 1 5 L C . A 01 TION
+2D A-L-54 2B
+ZONE FOCUS ROOM 1C
+313G1 313G2 CREEKSIDE 2C
+DISH DROP 313.25 14 FOCUS ROOM 313F2 P 3 H 12 O . N 41 E TEA 3 M 13 R .4 O 0 OM D C IS R H E W E A K S S H ID IN E G Z 31 O 3 N F E 1 313.31 EL 3 E 1 C 3. T 3 0 CL E S L E E R 3 V 1 V A 5 I T C O E R CREEKSIDE BOH
+315A6 3A C S R E E R E V K E S R ID Y E 315A1
+3D A-L-55 3B 15
+WOMENS RESTROOM 3C
+316.22
+A-L-57 UNISEX 316.23
+LOBBY 2
+410.00
+CREEKSIDE SERVERY 16.5
+315A3
+1 / A-D-31.C3
+CREEKSIDE
+1 / A-D-31.E2 SEATING
+315A
+17.5
+CABLE -DEV CABLE -CORP
+414.30 414.31
+EXIT
+PASSAGEWAY
+414.26
+FOCUS ROOM ELECT RM
+414D2 414.32
+13.313
+A-L-57 1
+315A6
+1 A-G-16 1C
+1C313
+RAMP DN 1:13.3
+PHONE
+312.42 312.42 312.41
+CIRCULATION 315.00
+1G313 2G313
+313E1 313F2 313F1
+1D313
+00GG33ZZ 0A3Z 0G1X 0L8Z 0A6Z
+0A8W 0A6V 0A3X
+0A3X 0A6V 0A8Z
+0A8W 0A3X A-G 15 -35 A-G 8 -35
+0A6V
+0A6V
+0A3Z 0G1X 0L8Z
+00GG33ZZ 0G3X
+0G3X 0G3X 0H3Z 0A3Z 0A3Z
+0A3W
+10 0H3Z 00BB33ZZ A-G-36
+0A3Z 0A3Z 00GG33ZZ 0G3Z
+0H3Z 0H3Z 0A3Z 0H3Z 313.40 0A3Z 0H3Z 0A3Z 0H3Z 0A3Z ZONE 313E1 0A8W 0L8Z 0A3V 0A6V 0A6V 0L8Z 0A6Z
+0A8Z 0A3V 0A3Z
+0A8W
+1D A-L-52 A-G-35
+23 A-G-35
+F313 E313
+B 2 A-L-46 SIM. 313C 4 A-L-32
+313D A-L-46 1SIM.
+312.43
+6 A-L-32
+B B 2
+A-L-33
+25 A-G-37 E A-G 22 -35
+24 E A-G-35
+A-M-68
+A-G-22 E 30
+A-G-37
+A-G-37 E
+A-G 22 -37 E
+TYP.
+A-G-37TYP.
+A-L-39
+D2D313
+0A3Z
+0A3Z
+A-G-25 TYP.
+6'-0" 6'-11 3/8" 10'-11" 9'-6" 1'-7"
+0A3Z 1'-0 5/8"
+14 A-L-70 A-G-25 0A3Z
+SIM TYP.
+1 313D2E
+9 A-G-25 SIM 1 A-L-70 SIM
+SIM 13 A-G-25 SIM
+1H213
+1G213
+1H313 1 A-J-52
+1 A-J-52
+5'-2" 7'-9" 9'-1"
+0A8W 0A8Z 0A8W K 0A3W 10'-10" 11'-2" K
+0A3W K 16 1 0A3W K 0G3Y A-J-52 K A-J-52 K
+0A2Y 0A2Y
+0A3W
+"2/1 01-'4"0-'3 "6-'8
+"0-'3
+0A6Z
+11 A-L-46 0A6Z
+1'-2"
+"0-'3
+0L8Z
+8 A-J-52
+0L8Z 8
+"8-'9
+"4-'1
+"4-'1
+"6-'6
+"2-'3
+"2-'3
+"6-'6
+"4-'1
+11 11RFI 1104 11
+0A6Z 11 ALIGN 15 6'-0" 6'-11" 1'-1"
+11 0A6Z
+11 11RFI 1104
+0A6Z 11 11
+11 11 11 11 11 11 11RFI 1104 0A6Z 0A6W 15 11 150A6V 15
+11 310.04
+0A6Z 11RFI 1104
+4'-10 1/8" 8'-6" 1'-6" 13'-0"
+"3-'7 "4/3 6-'6
+"2/1 11-'21
+"4-'31
+"2/1
+1-'1
+"11-'2
+"4-'3
+"11-'21 "1-'1
+"1-'1
+"11-'31
+"3-'4
+"1-'5
+"4 10'-0 3/4"
+3'-6 3/4"
+"8/5 9-'6
+"4/1 9-'6
+"2/1 8-'4
+2'-7" 2'-8 3/4"
+NGILA
+6'-0"
+"2/1
+11-'31
+"2/1
+0-'8 "8/5 6-'9 "8/1 3-'1
+"8/1 7-'1
+"8/7 01-'7
+"8/1 01-'4
+"6-'8
+"8/5 2-'9 "9-'3 7'-3"
+6'-6 3/4" 13'-4 1/2" 6 3/8"
+NGILA
+"8/3
+9-'5
+"4/3 1-'5
+"2/1
+3-'41
+"2/1 11-'4
+"8/3
+"4/1 1-'1
+9" 7'-10 7/8" 4'-10 1/8" 10'-1 1/8" 9'-2 5/8" 3'-4 3/4"
+ALIGN ALIGN
+NGILA "8/5 5"4/1 7-'11
+"5-'11
+"2/1
+1-'6
+"2/1 5-'4 "8/7 6-'7 "8/1 11-'6
+42'-3 1/8"
+1'-6 5/8" 2 1/4"
+"8/5
+"8/5 1-'1
+Area 3 Level 1 - C4
+C4 First coat taping work.
+11'-6" 7'-3 3/4"
+4 Man Crew on exterior
+layout for stone
+coordination and clip
+install.
+## Page 25
+Y AA BB CC DD EE
+CIRCULATION
+320.02 ZONE FOCUS ROOM ZONE
+321F1 321F2 321G1 PHONE
+CONFERENCE 324.40 (L) ZONE 321.30 321E1 TEAM ROOM 324.35 PHONE
+324.41
+PHONE TEAM ROOM FOCUS ROOM 324.42 321.25 321D2
+I 3 W 2 1 1 E 2 3 IW 21 9 F 3 IW 21 G 9 P 3 H 24 O . N 43 E CON 3 F 2 ( E M 4 R .4 ) E 4 NCE
+ZONE
+321D1
+HALL
+324.02 6
+IW 14
+6.4 321D
+EXTERIOR
+DECK CONFERENCE
+IW 10 X321 X324 321C
+ZONE
+321C1
+FOCUS ROOM
+321B2
+IW 10 IW 7 321B 321A HALL CONFERENCE
+MEC 3 H 21 A . N 20 ICAL KITCHENETTE 324.01 32 (M 4.4 ) 5
+ELECT CL O S C T C O U R P A A G N E T 321.46 321.21 321.15 HUB LOUNGE 321.45
+ZONE B S E T V O E R R A A G G E E ZONE 321A1 324.46 321B1
+IW HALL 321.01
+ZONE
+322B1 ZONE JANITOR JANITOR 322A1 323.47
+322.20
+WOMENS TEAM ROOM RESTROOM 322.15
+322.21 ELECT RM
+323.46
+MENS
+RESTROOM HALL 322.22 322.01
+FOCUS ROOM
+322B2 IW 9 IW 7 HUB LOUNGE
+322B 322A 322.45 MAIL/COPY
+UNISEX 323.45
+322.23
+ZONE
+322C1
+IW 10 322C 1 / A-D-32.C2
+1 / A-D-32.C3 1 / A-D-32.C4 DECK
+X322
+IW 10
+322D
+51.123
+FOCUS ROOM 321A2
+FOCUS ROOM 322A2
+EXTERIOR
+CONFERENCE
+X323
+"0-'6
+"0-'8
+"4/1 6-'7
+"8/5
+01-'6
+"8/5 01-'6
+"8/5
+01-'6
+"8-'5
+ELEVATOR 313
+1C223
+A-G-20
+321B1
+322B1
+51.223
+321B2B
+C2B123
+C2B223
+1F123 F2F123 G2F123 1G123
+0A6V 0A6V 0L8Z
+B 0H3Z 0H3Z 0H3Z 0A6Z 0H3Z 0H3Z 0A6Z 0H3Z 0H3Z
+0A3Z
+0H3Z
+0H3Z
+0H3Z
+0A3Z
+0L8Z
+0A6V
+0A6V
+0A6V
+0A6V
+0L8Z
+0A3Z B
+0A3Z
+0A3Z
+0A3Z
+0A3Z
+0A3Z
+0A3Z
+0G1X 0A3Z
+0G1X
+0A3Z
+0G1X 0G3Z
+0H3Z
+0G1Z
+322B2B
+0A3Z 0A3Z A-G-27
+0G1X 0G3Z 0G3Z
+0A3Z
+0A6V
+0A6V
+0A6V
+1D123
+1C123
+A-L-32 7 A-G-26 B 1
+324.40 321E1
+324.41
+324.42 0H3Z
+324.43
+324.44
+A-L-33 3
+3 A-G-28
+A-L-46 A-L-46
+SIM. SIM.
+323.45
+A-L-33 3
+64.423
+01.323
+0A6V
+324.45
+321.01
+"6-'7
+0A6V 0A6V
+321A1
+2A123
+11 A-G-25 TYP
+321D2E
+A-G-25
+A-G-25
+A-G-25
+A-G-25
+0A3Z
+0H3Z
+A-G-25 0A3Z
+9 A-G-25
+D2D123 321.25
+03.123
+A-J-52 A-J-52 K
+8 15 15 0L8Z 8 8
+11 11 0A3V 11 11 11
+11 K A-L-46 7 2 11 11 A-G-24
+8 11
+A-M-38 8
+0A3V
+0L8Z
+0A3V
+A-J-52
+A-J-52
+11 0A3Z 11 11 0A3Z
+11 11 0A6Z 11 0H3Z
+0H3Z
+11 11
+11 11
+A-J-52
+0A3V 8
+0A3V
+A-J-52
+411.121
+3'-8 1/4" 9'-3 1/4" 6'-11 3/4" 5'-10 1/8" 6'-2 7/8"
+1'-6 1/2" 2'-11 1/4"
+0A3Z
+0H3Z
+121.113
+0A3Z
+"4/1
+3-'5"4/1
+2-'3
+"8/1
+6-'6
+"4/1 8-'5
+"4/1 3-'9
+"2/1 11-'5
+"8/7
+2-'6
+"0-'9
+"2/1
+6-'1
+"8/5 9
+2'-11 7/8" 2'-10 1/2" 30'-8 3/4" 2'-10 1/8"
+10'-4 7/8" 6'-0 1/2" 6'-6" 10'-0 1/8" 5'-5 7/8"
+"8/3
+8-'3
+"0-'3
+"6-'4
+"4/3 3-'3
+7'-0 1/4" 1'-2 3/8" 2'-0 7/8"
+CENTER ON WALL
+4'-8 1/4" 9'-3 1/4" 14'-6 3/4" 5'-10 1/4"1'-7"
+1'-6 1/2"
+"4/3
+2-'4
+"7-'1"4/1
+01-'5
+"4/3
+0-'6
+"6-'8
+"0-'7
+"0-'6
+"0-'8
+"8/1
+5-'8
+"8/7
+9-'4
+"8/1
+1-'7
+"0-'1
+"8/7
+"0-'9
+"0-'6
+"0-'9
+"8/7
+4-'02
+"8/1
+6'-6" 9'-0" 3"
+2'-7 1/2"
+"0-'1
+"0-'8
+"0-'6
+"0-'8
+"0-'1
+6'-6" 9'-3" 2'-7 1/2"
+NGILA
+NGILA
+CENTER ON
+MULLION
+"8/3
+"8/5
+0-'12
+"0-'8
+3'-8 1/4" 9'-3 3/4" 8'-6" 5'-7" 7'-0 7/8"
+1'-6" 10 1/8"
+"4/3
+6-'6
+2'-0" 2'-8"
+ALIGN ALIGN
+2'-0"
+Area
+Level
+NGILA
+C1 Level 2
+Soffit Hang
+C1 Wall/ Tile
+backerboard
+Hang.
+## Page 26
+EE FF GG HH JJ KK LL MM NN z50
+ZONE
+323C1
+IW 10
+323C
+1 / A-D-32.C1 1 / A-D-32.C2
+1 / A-D-32.C3
+CIRCULATION
+320.03 4D A-L-56 4B
+CREEKSIDE
+BOH 325A7
+IW 10 2A 323D A-L-56 3B
+ZONE A-L-56 A-L-56 1B
+323D1 2D A-L-56
+TEAM ROOM 4A A-L-55 41 322.44 HALL ELECT RM 1D A-L-53 1B 322.02 325.11
+IW 8 IIWW 1100 FOCUS ROOM 1C 323F 332233EE 323D2
+PHONE CREEKSIDE 322.42 DISHWASHING 3D A-L-56 323.31
+MECHANICAL
+325.10 ROOM PHONE 14 2.35 322.41 ELECT RM 323.32
+PHONE 322.40 ZONE SERVICE
+323E1 EMR ELEVATOR
+FOCUS ROOM ZONE 323.30 315 323F2 323F1
+CIRCULATION
+320.04 15
+PHONE
+WOMENS 326.18
+RESTROOM
+326.22
+PHONE
+326.17
+CREEKSIDE
+1A SEATING
+325A
+PHONE
+326.16 A-L-57
+UNISEX
+326.20
+PHONE
+326.15 16
+13.323
+7A523
+EXTERIOR
+CONFERENCE X323
+1'-0"
+7'-5 1/4" 5'-11" 6'-7"
+320.04
+1C323
+1D323
+323F1
+2F323
+B 00GG33ZZ
+0A3Z 0A8Z
+0A6Z 0A3Z 0A6V
+0A6V
+A-G-35
+0A6V
+0A6Z
+0A6V
+00GG33ZZ 0A3Z 0G1X 18
+0G3V A-G-36
+0G3X
+0H3Z 0B3Z 9
+A-G-36 0H3Z 0A3Z
+00GG33ZZ 2 0A3X A-G-16 0H3Z
+0A3Z 0H3Z 0A3Z 18 323E1 A-G-36
+0G1X
+0H3Z
+0G3Z 0L8Z 0A6V
+0A6V 0A6V 0G3Z 0A3Z 0H3Z
+326.18
+0H3Z
+0H3Z 326.17
+0H3Z 326.16
+0H3Z 326.15
+0G3Z 0H3Z
+53.223
+323.45
+323C
+3 A-L-32
+323D
+322.44
+322.42
+322.41
+5 A-L-32 322.40
+B B 0A6V 0A6V
+1 A-L-33
+D2D323
+A-J-52
+0L8Z
+A-J-52
+1 A-G-25 18
+K 11
+E 11 8
+0A3Z
+11 323D2E
+5 A-G-25 11 SIM 14
+A-G-25
+TYP 11 8 A-L-46 11 11
+0A3V 0A3V 9
+A-G-25 11
+SIM 8 0L8Z
+K 15 15 K K 3 1 11 K A-J-52 0G3Y K A-J-52 14 A-L-46
+0A2Y 0A2Y K
+K 11
+"5-'2
+"0-'4
+"01-'5
+"6-'3
+0G2W
+0G2W 0G6W
++2'-6" 0G2W
+"6-'3
+"0-'4
+"6-'9
+"6-'2
+0G2W
++4'-0"
+1'-0"
+0G2W
+0G6W
++2'-6"
+0G2W
+0G6X
++4'-0"
+1'-0"
+4 A-L-33
+"8/7
+5'-6 3/4" 10'-0" 9'-4" 3'-8"
+"4/3
+6-'6
+8'-6 1/4"
+"4/1 3-'6
+"4/1 3-'6
+"4/1 3-'6
+"2/1
+4-'01
+"8/1
+1-'1
+ALIGN
+ALIGN
+"8/7
+01-'7
+"8/1 01-'4
+"6-'8
+"8/5
+2-'9
+"4/1 8-'3
+"8/1
+7-'1
+4'-6 1/8" 1'-11 7/8"
+"6-'4
+"8/5
+0-'01
+7'-10 7/8" 4'-10 1/8" 8'-6" 5'-3 1/4" 9'-2 3/4"
+7'-3"
+"2/1
+2-'61
+"0-'31
+10'-4" 6'-0 3/8"
+"8/5 0-'11
+"8/1 01-'9
+"1-'"32/1 5
+"8/1
+"4/1
+1-'1
+2'-2 3/4"
+"8/1
+6-'7
+"8/5 6-'11
+Area 3 Level 2 - C4
+Bathroom Tile
+Backerboard
+hang.
+## Page 27
+Elevator Shaft work
+## Page 28
+Elevator Shaft work

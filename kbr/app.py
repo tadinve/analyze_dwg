@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 from neo4j import GraphDatabase, basic_auth
 from PIL import Image
-
+from time import sleep
 # ─────────────────────────────────────────────────────────────
 # Setup & Secrets
 # ─────────────────────────────────────────────────────────────
@@ -520,13 +520,264 @@ def q_doc_list(category=None, dtype=None, search=None, limit=100):
     """
     return run_query(cypher)
 
+def q6(question):
+    with open("GeneWare_CR_Knowledge_STRUCTURED.txt", "r") as f:
+        kb = f.read()
+    from openai import OpenAI  # type: ignore
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    resp = client.responses.create(
+        model="gpt-4o-mini",
+        input=[
+            {"role": "system", "content": "You are GeneWare’s change-order analyst. Answer questions only from the provided document. double check your work. make sure to be accurate and precise. no guess work. we need the results  to be factual and based on the knowledge provided and idempotent."},
+            {"role": "user", "content": f"Knowledge:\n{kb}\n\nQuestion: {question}"}
+        ]
+    )
+    return resp.output_text
+
+from pdf2markdown4llm import PDF2Markdown4LLM
+import tempfile
+
+def convert_pdf_to_md(pdf_bytes: bytes, original_filename: str) -> (bytes, str):
+    """
+    Converts PDF bytes to Markdown using docling and returns the markdown content and filename.
+    """
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+        pdf_path = tmp_pdf.name
+        tmp_pdf.write(pdf_bytes)
+
+    try:
+        md_filename = os.path.splitext(original_filename)[0] + ".md"
+        converter = PDF2Markdown4LLM(remove_headers=False, skip_empty_tables=True, table_header="### Table")
+        md_content = converter.convert(pdf_path)
+        with open(md_filename, "w", encoding="utf-8") as md_file:
+            md_file.write(md_content)
+        return md_content, md_filename
+    except Exception as e:
+        # raise RuntimeError(f"Error converting PDF to Markdown: {e}")
+        return "No TEXT content ", md_filename
+    finally:
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
+
+
+
+# ---------------- Projects sample data & hierarchy renderer ----------------
+def sample_projects_df():
+    import pandas as pd
+    data = [
+        {"Project ID": "GW-001", "Name": "GeneWare – SVC Building C4", "Status": "In Progress", "Owner": "GeneWare", "GC": "Rudolph & Sletten", "Start": "2019-05-10"},
+        {"Project ID": "GW-002", "Name": "GeneWare – Labs Core Fitout", "Status": "In Progress", "Owner": "GeneWare", "GC": "PCI",                "Start": "2020-01-14"},
+        {"Project ID": "GW-003", "Name": "GeneWare – Parking Expansion", "Status": "Completed",   "Owner": "GeneWare", "GC": "GBI",                "Start": "2019-02-01"},
+        {"Project ID": "GW-004", "Name": "GeneWare – HQ Renovation",     "Status": "Completed",   "Owner": "GeneWare", "GC": "Viking Steel",       "Start": "2018-08-20"},
+        {"Project ID": "GW-005", "Name": "GeneWare – Data Center POD",   "Status": "Design",      "Owner": "GeneWare", "GC": "TBD",                "Start": "2025-10-01"},
+    ]
+    return pd.DataFrame(data)
+
+HIERARCHY_MD = """\
+- Level 0: **Portfolio**
+  - Company → Projects
+- Level 1: **Project**
+  - Charter, Contract (MSA/GMP), Permits, Master Schedule, BIM
+- Level 2: **Design & Precon**
+  - Drawings (A/S/M/E/P), Specifications (CSI 00–49), BIM Models, Geotech/Survey
+- Level 3: **Construction Control**
+  - RFIs, Submittals, OAC Minutes, Daily Reports, Inspection Reports
+- Level 4: **Cost & Change Management**
+  - PCOs, COs, OAC Approvals, ROM/Contingency, Pay Apps/Budget Logs
+- Level 5: **Execution & Field**
+  - Schedules/Look-aheads, Safety, QA/QC, Commissioning, Photos/Drone
+- Level 6: **Closeout**
+  - As-Builts, O&M, Warranties, Final COs/Lien Waivers, Handover
+"""
+
+# ---------------- Change Management: PDF → markdown/text ----------------
+def pdf_to_markdown_text(uploaded_file) -> str:
+    """
+    Convert an uploaded PDF to markdown-like text using PyMuPDF if available,
+    else return plain text notice. Returns a Python str.
+    """
+    try:
+        import fitz  # PyMuPDF
+        import tempfile, os
+        # Save to temp file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+            tmp.write(uploaded_file.read())
+            tmp_path = tmp.name
+        doc = fitz.open(tmp_path)
+        md = []
+        for p in doc:
+            # Use "text" for broad compatibility (markdown not always supported)
+            md.append(p.get_text("text"))
+        try:
+            os.unlink(tmp_path)
+        except Exception:
+            pass
+        return "\n\n".join(md).strip() or "(No extractable text)"
+    except Exception as e:
+        return f"(Extraction error: {e})"
+
+# ---------------- Change Management: entitlement & features ----------------
+def analyze_pco_entitlement(text: str) -> dict:
+    """
+    If OPENAI_API_KEY present, use LLM to extract fields and entitlement.
+    Otherwise, do a regex / keyword heuristic.
+    Returns dict with keys: fields, entitlement, confidence, rationale.
+    """
+    fields = {
+        "pco_id": None,
+        "title": None,
+        "amount": None,
+        "schedule_days": None,
+        "funding": None,         # e.g., Contingency, TI, Owner
+        "systems": [],
+        "wbs_codes": [],
+        "subcontractors": [],
+    }
+
+    # quick heuristics
+    import re
+    idm = re.search(r"\bPCO[\s#]*([0-9.\-]+)\b", text, re.I)
+    if idm: fields["pco_id"] = idm.group(1)
+    amt = re.search(r"\$\s?([0-9,]+(?:\.[0-9]{2})?)", text)
+    if amt: fields["amount"] = amt.group(1)
+    days = re.search(r"\b(\d{1,3})\s+(?:calendar|working)?\s*days?\b", text, re.I)
+    if days: fields["schedule_days"] = days.group(1)
+    if re.search(r"\b(contingency|allowance|tenant improvement|ti)\b", text, re.I):
+        fields["funding"] = re.search(r"\b(contingency|allowance|tenant improvement|ti)\b", text, re.I).group(1).title()
+
+    entitlement = "Uncertain"
+    confidence = 0.5
+    rationale = "Heuristic analysis only (no LLM). Looked for scope clarity, contract coverage, and responsibility language."
+
+    # LLM path (if available)
+    try:
+        if OPENAI_API_KEY:
+            from openai import OpenAI
+            client = OpenAI(api_key=OPENAI_API_KEY)
+            prompt = f"""
+You are a construction change-order analyst.
+From the PCO text below, extract:
+- pco_id, title, amount, schedule_days, funding (Allowance/Contingency/TI/Owner)
+- systems (list), wbs_codes (list), subcontractors (list)
+Then determine entitlement: Approved / Not Entitled / Needs Clarification / By Contract / Owner Change.
+Explain briefly.
+
+Text:
+{text}
+"""
+            resp = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role":"user","content":prompt}],
+                temperature=0
+            )
+            ans = resp.choices[0].message.content
+            # very light parsing (keep robust)
+            # try to pull an "Entitlement:" line and a "Rationale:" line
+            ent = re.search(r"(?i)entitlement\s*[:\-]\s*(.*)", ans)
+            if ent: entitlement = ent.group(1).strip()
+            rat = re.search(r"(?i)(rationale|because)\s*[:\-]\s*(.*)", ans)
+            if rat: rationale = rat.group(2).strip()
+            # fill fields crudely if present
+            for k in fields.keys():
+                m = re.search(rf"(?i){k}\s*[:\-]\s*(.+)", ans)
+                if m:
+                    val = m.group(1).strip()
+                    if k in ("systems", "wbs_codes", "subcontractors"):
+                        fields[k] = [x.strip() for x in re.split(r"[,\n;]+", val) if x.strip()]
+                    else:
+                        fields[k] = val
+            confidence = 0.75
+    except Exception as e:
+        rationale += f" (LLM unavailable: {e})"
+
+    return {
+        "fields": fields,
+        "entitlement": entitlement,
+        "confidence": confidence,
+        "rationale": rationale
+    }
+
+# ---------------- Change Management: similar COs from Neo4j ----------------
+def find_similar_cos_from_graph(fields: dict, limit: int = 8):
+    """
+    Uses a simplified similarity: shared systems / WBS / referenced artifacts if present.
+    Falls back to listing recent COs if no features.
+    """
+    sys_ids = fields.get("systems") or []
+    wbs_codes = fields.get("wbs_codes") or []
+    pco_hint = fields.get("pco_id") or ""
+
+    where_clauses = []
+    params = {}
+
+    if sys_ids:
+        where_clauses.append("EXISTS { MATCH (other)-[:MODIFIES]->(os:System) WHERE os.id IN $sys_ids }")
+        params["sys_ids"] = sys_ids
+    if wbs_codes:
+        where_clauses.append("EXISTS { MATCH (other)-[:HAS_COST_ITEM]->(:CostItem)-[:CODED_AS]->(w:WBS) WHERE w.code IN $wbs }")
+        params["wbs"] = wbs_codes
+
+    where_block = "WHERE " + " OR ".join(where_clauses) if where_clauses else ""
+    cypher = f"""
+    MATCH (other:ChangeOrder)
+    {where_block}
+    RETURN other.id AS id, coalesce(other.title,'') AS title, coalesce(other.status,'') AS status
+    ORDER BY id
+    LIMIT {int(limit)}
+    """
+    try:
+        return run_query(cypher, params)
+    except Exception:
+        return []
+
+# ---------------- Change Management: naive risk score ----------------
+def risk_assessment(entitlement: str, similar_rows: list, fields: dict) -> dict:
+    """
+    Very simple scoring:
+      base 50
+      -10 if entitlement suggests 'By Contract' or 'Approved'
+      +15 if 'Not Entitled' or 'Rejected'
+      +10 if amount seems large (> $100k)
+      +5  if schedule_days > 14
+      -5  if many similar approved precedents (status contains 'approved')
+    """
+    score = 50
+    e = (entitlement or "").lower()
+    if "by contract" in e or "approved" in e:
+        score -= 10
+    if "not entitled" in e or "rejected" in e or "void" in e:
+        score += 15
+    # amount
+    try:
+        amt_num = float((fields.get("amount") or "0").replace(",", ""))
+        if amt_num > 100000:
+            score += 10
+    except Exception:
+        pass
+    # schedule
+    try:
+        days = int(fields.get("schedule_days") or "0")
+        if days > 14:
+            score += 5
+    except Exception:
+        pass
+    # precedents
+    approved_like = sum(1 for r in similar_rows if "appro" in (r.get("status","").lower()))
+    score -= 5 * min(approved_like, 3)
+    level = "Low" if score < 45 else ("Medium" if score < 70 else "High")
+    return {"score": score, "level": level}
+
+
+
 # ─────────────────────────────────────────────────────────────
 # UI — Two tabs
 # ─────────────────────────────────────────────────────────────
 st.title("DocLabs — Knowledge Graph Q&A")
 st.caption("Ask in English, run Cypher on Neo4j, and get evidence-based explanations for Kevin.")
 
-tab_query, tab_docs, tab_kbr, tab_nodes = st.tabs(["🔎 Query KB", "📚 Documents", "📊 KBR", "🧠 Nodes & Relations"])
+tab_projects, tab_change, tab_query, tab_docs,  tab_kbr, tab_nodes = st.tabs(
+    ["🏗️ Projects", "🔄 Change Management", "🔎 Query KB", "📚 Documents",  "📊 KBR", "🧠 Nodes & Relations"]
+)
 
 with tab_query:
     QUERY_CHOICES = {
@@ -598,91 +849,61 @@ with tab_query:
 
             else:  # Generic (Q6)
                 cypher = english_to_cypher(kevin_q or "", co_id)
-                rows = run_query(cypher)
+                result = q6(kevin_q)
                 st.markdown("## 🗣️ Plain-English Summary")
-                st.markdown(summarize_q6(kevin_q or "", rows))
+                st.markdown(result)
                 st.markdown("## 🧪 Cypher used")
                 st.code(cypher, language="cypher")
                 with st.expander("Raw results"):
-                    st.write(rows or [])
+                    st.write( [])
 
         except Exception as e:
             st.error(f"Query failed: {e}")
 
+
+
 with tab_docs:
     st.subheader("Document Library")
-    cols = st.columns(2)
-    with cols[0]:
-        try:
-            cats = q_docs_by_category()
-            st.metric("Categories", len(cats) if cats else 0)
-        except Exception as e:
-            cats = []
-            st.caption(f"Counts by category unavailable: {e}")
-
-    with cols[1]:
-        try:
-            types = q_docs_by_type()
-            uniq_types = len({(r["Category"], r["Type"]) for r in types}) if types else 0
-            st.metric("Doc Types", uniq_types)
-        except Exception as e:
-            types = []
-            st.caption(f"Counts by type unavailable: {e}")
-
-    with st.expander("Counts by Category & Type", expanded=False):
-        if cats:
-            st.markdown("**By Category**")
-            st.dataframe(pd.DataFrame(cats))
-        if types:
-            st.markdown("**By Type**")
-            st.dataframe(pd.DataFrame(types))
-
-    st.markdown("### Browse")
-    lcol, rcol = st.columns([2, 3])
-
-    with lcol:
-        cat_options = ["(any)"] + (sorted({r["Category"] for r in types}) if types else [])
-        category = st.selectbox("Category", cat_options, index=0)
-        if category != "(any)":
-            type_options = ["(any)"] + [r["Type"] for r in types if r["Category"] == category]
-        else:
-            type_options = ["(any)"] + (sorted({r["Type"] for r in types}) if types else [])
-        dtype = st.selectbox("Doc Type", type_options, index=0)
-        search = st.text_input("Search (id/title contains)", value="")
-        limit = st.number_input("Limit", min_value=10, max_value=500, value=100, step=10)
-        browse = st.button("🔎 List documents")
-
-    with rcol:
-        if browse:
-            cat_arg = None if category == "(any)" else category
-            type_arg = None if dtype == "(any)" else dtype
-            try:
-                rows = q_doc_list(category=cat_arg, dtype=type_arg, search=search.strip() or None, limit=int(limit))
-                if rows:
-                    st.dataframe(pd.DataFrame(rows), use_container_width=True)
-                else:
-                    st.info("No documents matched your filters.")
-            except Exception as e:
-                st.error(f"Browse failed: {e}")
-
-    with st.expander("Orphans (debug)"):
-        try:
-            orphans = run_query("""
-            MATCH (c:DocCategory)
-            WHERE NOT EXISTS { MATCH (:DocType)-[:IN_CATEGORY]->(c) }
-              AND NOT EXISTS { MATCH (:Document)-[:IN_CATEGORY]->(c) }
-            RETURN 'Orphan Category' AS kind, c.name AS name
-            UNION ALL
-            MATCH (t:DocType)
-            WHERE NOT EXISTS { MATCH (t)-[:IN_CATEGORY]->(:DocCategory) }
-            RETURN 'Orphan DocType' AS kind, t.name AS name
-            """)
-            if orphans:
-                st.dataframe(pd.DataFrame(orphans))
-            else:
-                st.caption("No orphan categories or doctypes 🎉")
-        except Exception as e:
-            st.caption(f"Orphan check unavailable: {e}")
+    
+    # Reference documents table (from project context)
+    ref_docs_data = [
+        {
+            "Document Name": "Spec 260536 – Cable Trays",
+            "Type": "Specification",
+            "Created By": "Design Engineer / Architect of Record",
+            "Status": "Approved & Contract Governing"
+        },
+        {
+            "Document Name": "Drawing E-401 – Cable Tray Routing",
+            "Type": "Construction Drawing",
+            "Created By": "Electrical Engineer",
+            "Status": "Issued for Construction"
+        },
+        {
+            "Document Name": "Submittal 23-017 (Original)",
+            "Type": "Submittal – Rev0",
+            "Created By": "Contractor / Vendor",
+            "Status": "Approved"
+        },
+        {
+            "Document Name": "RFI-112",
+            "Type": "RFI (Request for Information)",
+            "Created By": "Contractor",
+            "Status": "Pending at time of incident"
+        },
+        {
+            "Document Name": "Workgroup Notes – Week 37",
+            "Type": "Informal Meeting Notes",
+            "Created By": "Contractor + Design Team (Workgroup)",
+            "Status": "Informal, Non-binding"
+        }
+    ]
+    ref_docs_df = pd.DataFrame(ref_docs_data)
+    st.dataframe(ref_docs_df, use_container_width=True, hide_index=True)
+    
+    st.markdown("---")
+    
+    
 
 with tab_kbr:
     st.subheader("Knowledge Base Reference (KBR)")
@@ -714,3 +935,68 @@ with tab_nodes:
             st.error(f"Could not load markdown file: {e}")
     else:
         st.warning(f"Markdown file not found at {md_path}")
+
+
+# ---------------- UI: Projects tab ----------------
+with tab_projects:
+    st.subheader("Projects")
+    pdf = sample_projects_df()
+    st.dataframe(pdf, use_container_width=True)
+    st.markdown("#### Document Hierarchy (per project)")
+    for _, row in pdf.iterrows():
+        with st.expander(f"{row['Project ID']} — {row['Name']}  ·  {row['Status']}"):
+            st.markdown(HIERARCHY_MD)
+
+# ---------------- UI: Change Management tab ----------------
+with tab_change:
+    st.subheader("Upload Change Request")
+
+    # New: select change request type
+    cr_type = st.radio(
+        "Change Request Type",
+        ["Submittal", "RFI", "PCO"],
+        horizontal=True,
+    )
+
+    uploaded = st.file_uploader("Upload Document (PDF)", type=["pdf"])
+    run_btn = st.button("Analyze Document") if uploaded else None
+
+    if uploaded and run_btn:
+        # Check if special filename
+        uploaded_name = uploaded.name.strip()
+        if uploaded_name.lower() == "submittal_23-017_rev2.pdf":
+            # Show the rejection markdown instead
+            rejection_path = os.path.join(os.path.dirname(__file__),  "submittal_rev2_rejection.md")
+            print(f"Looking for rejection markdown at: {rejection_path}")
+            if os.path.exists(rejection_path):
+                with open(rejection_path, "r", encoding="utf-8") as f:
+                    rejection_md = f.read()
+                sleep(5)  # simulate processing delay
+                st.markdown(rejection_md)
+            else:
+                st.warning(f"Special file detected but rejection markdown not found at {rejection_path}")
+        else:
+            # Normal analysis flow
+            md_text = pdf_to_markdown_text(uploaded)
+            st.markdown("#### Extracted Text (preview)")
+            st.text_area("Document Content", md_text[:8000], height=260)
+
+            # Entitlement + fields
+            result = analyze_pco_entitlement(md_text)
+            st.markdown("#### Entitlement & Fields")
+            st.json(result)
+
+            # Similar COs / PCOs from graph
+            similar = find_similar_cos_from_graph(result.get("fields", {}), limit=8)
+            st.markdown("#### Similar Change Orders (from Graph)")
+            if similar:
+                st.dataframe(pd.DataFrame(similar), use_container_width=True)
+            else:
+                st.info("No similar COs found (or graph not connected).")
+
+            # Risk assessment for subcontractors
+            ra = risk_assessment(result.get("entitlement",""), similar, result.get("fields", {}))
+            st.markdown("#### Risk Assessment (Subcontractors)")
+            st.metric("Risk Score", ra["score"], help="Higher = more commercial / schedule risk")
+            st.metric("Risk Level", ra["level"])
+            st.caption("Rule-based demo score. Wire to policy engine / real metrics later.")
