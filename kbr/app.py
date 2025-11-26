@@ -866,40 +866,54 @@ with tab_docs:
     st.subheader("Document Library")
     
     # Reference documents table (from project context)
-    ref_docs_data = [
-        {
-            "Document Name": "Spec 260536 – Cable Trays",
-            "Type": "Specification",
-            "Created By": "Design Engineer / Architect of Record",
-            "Status": "Approved & Contract Governing"
-        },
-        {
-            "Document Name": "Drawing E-401 – Cable Tray Routing",
-            "Type": "Construction Drawing",
-            "Created By": "Electrical Engineer",
-            "Status": "Issued for Construction"
-        },
-        {
-            "Document Name": "Submittal 23-017 (Original)",
-            "Type": "Submittal – Rev0",
-            "Created By": "Contractor / Vendor",
-            "Status": "Approved"
-        },
-        {
-            "Document Name": "RFI-112",
-            "Type": "RFI (Request for Information)",
-            "Created By": "Contractor",
-            "Status": "Pending at time of incident"
-        },
-        {
-            "Document Name": "Workgroup Notes – Week 37",
-            "Type": "Informal Meeting Notes",
-            "Created By": "Contractor + Design Team (Workgroup)",
-            "Status": "Informal, Non-binding"
-        }
-    ]
-    ref_docs_df = pd.DataFrame(ref_docs_data)
-    st.dataframe(ref_docs_df, use_container_width=True, hide_index=True)
+    st.markdown("#### Key Reference Documents")
+    
+    # Create HTML table with clickable link
+    html_table = """
+    <table style="width:100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f0f2f6;">
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Document Name</th>
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Type</th>
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Created By</th>
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><a href="https://storage.googleapis.com/kbr-public-docs/01%20-%20SPECIFICATION%20%E2%80%94%20SECTION-26-05-36%20CABLE-TRAYS.pdf" target="_blank">Spec 260536 – Cable Trays</a></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Specification</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Design Engineer / Architect of Record</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Approved & Contract Governing</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td style="padding: 10px; border: 1px solid #ddd;"><a href="https://storage.googleapis.com/kbr-public-docs/02%20-%20CableTraysDrawing.png" target="_blank">Drawing E-401 – Cable Tray Routing</a></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Construction Drawing</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Electrical Engineer</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Issued for Construction</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><a href="https://storage.googleapis.com/kbr-public-docs/03%20Submittal_23-017_Full_Referenced.pdf" target="_blank">Submittal 23-017 (Original)</a></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Submittal </td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Contractor / Vendor</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Approved</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td style="padding: 10px; border: 1px solid #ddd;"><a href="https://storage.googleapis.com/kbr-public-docs/04%20RFI_112_Request_For_Information.pdf" target="_blank">RFI-112</a></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">RFI (Request for Information)</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Contractor</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Pending </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><a href="https://storage.googleapis.com/kbr-public-docs/05%20Workgroup_Notes_Week37_Corrected.pdf" target="_blank">Workgroup Notes – Week 37</a></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Informal Meeting Notes</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Contractor + Design Team (Workgroup)</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Informal, Non-binding</td>
+            </tr>
+        </tbody>
+    </table>
+    """
+    st.markdown(html_table, unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -972,7 +986,7 @@ with tab_change:
                 with open(rejection_path, "r", encoding="utf-8") as f:
                     rejection_md = f.read()
                 sleep(5)  # simulate processing delay
-                st.markdown(rejection_md)
+                st.markdown(rejection_md, unsafe_allow_html=True)
             else:
                 st.warning(f"Special file detected but rejection markdown not found at {rejection_path}")
         else:

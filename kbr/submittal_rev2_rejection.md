@@ -17,6 +17,8 @@ This submittal **should not be approved** and **requires an RFI response before 
 **Spec Reference:**  
 **Spec 26 05 36 — Cable Tray Systems, Article 2.1 (CT-1 Steel Requirements)**
 
+<a href="https://storage.googleapis.com/kbr-public-docs/01%20-%20SPECIFICATION%20%E2%80%94%20SECTION-26-05-36%20CABLE-TRAYS.pdf" target="_blank">Spec 260536 – Cable Trays</a>
+
 | Specification Requirement | Submittal Rev 2 | Status |
 |---------------------------|----------------|--------|
 | Hot-Dip Galvanized Steel (ASTM A123) | Aluminum 6063-T6 | ❌ |
@@ -65,7 +67,7 @@ No substitution may be considered until **RFI-112 receives a formal response**.
 **Meeting Minutes Reference:**  
 _Workgroup Meeting — Week 37 (2025-06-28)_
 
-> “I’m not opposed to aluminum **as long as Mark and the EOR approve it**.” — Priya Shah
+> “I’m not opposed to aluminum **also check with Mark and get EOR to approve it**.” — Priya Shah
 
 This was a **conditional statement**, not approval:
 
